@@ -4,31 +4,50 @@ import viteLogo from '/vite.svg'
 import './App.css'
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [firstName,setFirstName] = useState('')
+  const [lastName,setLastName] = useState('')
+  
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    try {
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          firstName,
+          lastName,
+        }),
+      })
+
+      const data = await response.json()
+      console.log(data)
+
+      // clear input fields after submission
+      setFirstName('')
+      setLastName('')
+    } catch (error) {
+      console.error('error adding user:', error)
+    }
+  }
 
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
+    <div className="App">
+      <h1>Add User</h1>
+      <form onSubmit={handleSubmit}>
+        <label>
+          First Name:
+          <input type="text" value={firstName} onChange={(e) => setFirstName(e.target.value)} />
+        </label>
+        <label>
+          Last Name:
+          <input type="text" value={lastName} onChange={(e) => setLastName(e.target.value)} />
+        </label>
+        <button type="submit">Add User</button>
+      </form>
+    </div>
   )
 }
 
