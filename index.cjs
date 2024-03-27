@@ -85,4 +85,23 @@ app.post('/users', async function(req, res) {
     }
   });
 
+  app.delete('/users/:id', async function(req, res) {
+    try {
+      const userId = req.params.id;
+
+      // check if id is valid (may want to validate further)
+      if (!userId) {
+        return res.status(400).json({ success: false, message: 'User ID is required.' });
+      }
+
+      // perform the delete operation
+      await req.db.query('DELETE FROM users WHERE id = ?', [userId])
+
+      res.json({success: true, message: 'User deleted successfully.'})
+    } catch (error) {
+      console.error('error deleting user:', error)
+      res.status(500).json({success: false, message: 'internal server error'})
+    }
+  })
+
 app.listen(port, () => console.log(`212 API Example listening on http://localhost:${port}`));
