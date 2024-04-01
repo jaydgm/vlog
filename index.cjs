@@ -55,7 +55,7 @@ app.use(async (req, res, next) => {
 app.get('/users', async function(req, res) {
     try {
     // query the database to fetch all cars where deleted_flag = 0
-    const [rows] = await req.db.query('SELECT * FROM users')
+    const [rows] = await req.db.query('SELECT * FROM Users')
   
     // send fetched data to client
     res.json({success: true, data: rows})
@@ -68,14 +68,29 @@ app.get('/users', async function(req, res) {
 
 app.post('/users', async function(req, res) {
     try {
-      const { firstName, lastName} = req.body;
+      const {firstName, lastName, username, email, password} = req.body;
     
       const query = await req.db.query(
-        `INSERT INTO users (firstName, lastName) 
-         VALUES (:firstName, :lastName)`,
+        `INSERT into Users (
+          firstName,
+          lastName,
+          username,
+          email,
+          password
+        )
+        VALUES (
+          :firstName, 
+          :lastName,
+          :username,
+          :email,
+          :password
+        )`,
         {
           firstName,
-          lastName
+          lastName,
+          username,
+          email,
+          password
         }
       );
     
@@ -85,23 +100,4 @@ app.post('/users', async function(req, res) {
     }
   });
 
-  app.delete('/users/:id', async function(req, res) {
-    try {
-      const userId = req.params.id;
-
-      // check if id is valid (may want to validate further)
-      if (!userId) {
-        return res.status(400).json({ success: false, message: 'User ID is required.' });
-      }
-
-      // perform the delete operation
-      await req.db.query('DELETE FROM users WHERE id = ?', [userId])
-
-      res.json({success: true, message: 'User deleted successfully.'})
-    } catch (error) {
-      console.error('error deleting user:', error)
-      res.status(500).json({success: false, message: 'internal server error'})
-    }
-  })
-
-app.listen(port, () => console.log(`212 API Example listening on http://localhost:${port}`));
+app.listen(port, () => console.log(`listening on http://localhost:${port}`));
