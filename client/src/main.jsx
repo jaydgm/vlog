@@ -8,12 +8,14 @@ import {
 
 import App from "./App.jsx";
 import Login from "./components/Login";
+import Signup from "./components/Signup.jsx";
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
       <Route path="/" element={<App />}>
         <Route path="login" element={<Login />} />
+        <Route path='signup' element={<Signup />} />
       </Route>
     </>
   )
