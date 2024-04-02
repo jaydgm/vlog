@@ -17,6 +17,5 @@
 - add some basic endpoints to test API
 
 4/1/24 9:00am - 1:00pm
-- set up mySQL database
-- Add endpoint to POST to database
-
+- add basic login page ui
+- hook login to backend and test POST/GET endpoint
