@@ -53,25 +53,11 @@ app.use(async (req, res, next) => {
   }
 });
 
-app.get('/users', async function(req, res) {
-    try {
-    // query the database to fetch all cars where deleted_flag = 0
-    const [rows] = await req.db.query('SELECT * FROM Users')
-  
-    // send fetched data to client
-    res.json({success: true, data: rows})
-    } catch (err) {
-      // handle errors
-      console.error('error fetching users:', err)
-      res.status(500).json({success: false, message: 'internal server error'})
-    }
-  });
-
-app.put('/users', async function(req, res) {
+app.post('/users', async function(req, res) {
     try {
       const {name, username, email, password} = req.body;
 
-      const hashedPassword = await bcrypt(password, 10);
+      const hashedPassword = await bcrypt.hash(password, 10);
     
       const query = await req.db.query(
         `INSERT into Users (
@@ -97,6 +83,20 @@ app.put('/users', async function(req, res) {
       res.json({ success: true, message: 'User successfully created', data: null });
     } catch (err) {
       res.json({ success: false, message: err, data: null })
+    }
+  });
+
+  app.get('/users', async function(req, res) {
+    try {
+    // query the database to fetch all cars where deleted_flag = 0
+    const [rows] = await req.db.query('SELECT * FROM Users')
+  
+    // send fetched data to client
+    res.json({success: true, data: rows})
+    } catch (err) {
+      // handle errors
+      console.error('error fetching users:', err)
+      res.status(500).json({success: false, message: 'internal server error'})
     }
   });
 
