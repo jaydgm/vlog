@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import 'bootstrap/dist/css/bootstrap.min.css';
 
 function Signup() {
   const [firstName,setFirstName] = useState('')
@@ -13,6 +14,7 @@ function Signup() {
 
   return (
     <>
+      <button className="btn btn-primary">Primary Button</button>
     </>
       );
   }
