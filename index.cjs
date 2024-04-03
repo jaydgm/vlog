@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mysql = require('mysql2/promise');
 const bodyParser = require('body-parser');
+const bcrypt = require('bcrypt');
 
 // Allows us to access the .env
 require('dotenv').config();
@@ -66,9 +67,11 @@ app.get('/users', async function(req, res) {
     }
   });
 
-app.post('/users', async function(req, res) {
+app.put('/users', async function(req, res) {
     try {
       const {name, username, email, password} = req.body;
+
+      const hashedPassword = await bcrypt(password, 10);
     
       const query = await req.db.query(
         `INSERT into Users (
@@ -78,7 +81,7 @@ app.post('/users', async function(req, res) {
           password
         )
         VALUES (
-          :name
+          :name,
           :username,
           :email,
           :password
@@ -87,7 +90,7 @@ app.post('/users', async function(req, res) {
           name,
           username,
           email,
-          password
+          password: hashedPassword
         }
       );
     
