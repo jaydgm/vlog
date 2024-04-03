@@ -15,10 +15,34 @@ function Signup() {
     event.preventDefault();
 
     if (password !== repeatPassword) {
-      passwordMatchError(true)
+      setPasswordMatchError(true)
       return;
     }
+
+    try {
+      const response = await fetch('http://localhost:3000/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          name,
+          username,
+          email,
+          password,
+        }),
+      })
+
+      const data = await response.json()
+    } catch (error) {
+      console.error('error:', error)
+    }
   }
+
+  const handleRepeatPasswordChange = (event) => {
+    setRepeatPassword(event.target.value);
+    setPasswordMatchError(password !== event.target.value);
+  };
 
   return (
     <>
@@ -38,7 +62,7 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faUser} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="text" id="form3Example1c" className="form-control" onChange={(event) => setName(e.target.value)} />
+                            <input type="text" id="form3Example1c" className="form-control" onChange={(e) => setName(e.target.value)} />
                             <label className="form-label" htmlFor="form3Example1c">Your Name</label>
                           </div>
                         </div>
@@ -62,7 +86,7 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faKey} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="password" id="form3Example4cd" className="form-control" onChange={setRepeatPassword(e.target.value)}/>
+                            <input type="password" id="form3Example4cd" className="form-control" onChange={handleRepeatPasswordChange}/>
                             <label className="form-label" htmlFor="form3Example4cd">Repeat your password</label>
                           </div>
                         </div>
