@@ -1,14 +1,18 @@
 /** @type {import('tailwindcss').Config} */
+const colors = require('tailwindcss/colors')
 
 export default {
   content: [
-    "./src/components/Signup.jsx",
-    "./src/components/Login.jsx",
+    "./index.html", 
+    "./src/**/*.{js,ts,jsx,tsx}", 
   ],
-  darkMode: 'class',
   theme: {
-    extend: {},
+    extend: {
+    },
   },
-  plugins: [],
+  plugins: [
+    require('tailwindcss'),
+    require('autoprefixer'),
+  ],
 };
 
