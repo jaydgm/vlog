@@ -4,14 +4,20 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 
 function Signup() {
-  const [firstName,setFirstName] = useState('')
-  const [lastName,setLastName] = useState('')
+  const [name,setName] = useState('');
   const [username,setUsername] = useState('')
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('')
+  const [repeatPassword,setRepeatPassword] = useState('');
+  const [passwordMatchError, setPasswordMatchError] = useState(false)
   
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    if (password !== repeatPassword) {
+      passwordMatchError(true)
+      return;
+    }
   }
 
   return (
@@ -32,7 +38,7 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faUser} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="text" id="form3Example1c" className="form-control" />
+                            <input type="text" id="form3Example1c" className="form-control" onChange={(event) => setName(e.target.value)} />
                             <label className="form-label" htmlFor="form3Example1c">Your Name</label>
                           </div>
                         </div>
@@ -40,7 +46,7 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faEnvelope} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="email" id="form3Example3c" className="form-control" />
+                            <input type="email" id="form3Example3c" className="form-control" onChange={(e) => setEmail(e.target.value)} />
                             <label className="form-label" htmlFor="form3Example3c">Your Email</label>
                           </div>
                         </div>
@@ -48,7 +54,7 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faLock} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="password" id="form3Example4c" className="form-control" />
+                            <input type="password" id="form3Example4c" className="form-control" onChange={(e) => setPassword(e.target.value)} />
                             <label className="form-label" htmlFor="form3Example4c">Password</label>
                           </div>
                         </div>
@@ -56,11 +62,13 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faKey} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="password" id="form3Example4cd" className="form-control" />
+                            <input type="password" id="form3Example4cd" className="form-control" onChange={setRepeatPassword(e.target.value)}/>
                             <label className="form-label" htmlFor="form3Example4cd">Repeat your password</label>
                           </div>
                         </div>
-
+                        {passwordMatchError ? (
+                          <div className="text-danger">Passwords do not match!</div>
+                          ) : setPasswordMatchError(false)}
                         <div className="form-check d-flex justify-content-center mb-5">
                           <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
                           <label className="form-check-label" htmlFor="form2Example3">
