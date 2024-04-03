@@ -68,26 +68,23 @@ app.get('/users', async function(req, res) {
 
 app.post('/users', async function(req, res) {
     try {
-      const {firstName, lastName, username, email, password} = req.body;
+      const {name, username, email, password} = req.body;
     
       const query = await req.db.query(
         `INSERT into Users (
-          firstName,
-          lastName,
+          name,
           username,
           email,
           password
         )
         VALUES (
-          :firstName, 
-          :lastName,
+          :name
           :username,
           :email,
           :password
         )`,
         {
-          firstName,
-          lastName,
+          name,
           username,
           email,
           password
