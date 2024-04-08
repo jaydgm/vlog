@@ -113,6 +113,40 @@ app.post('/signin', async(req,res) => {
   }
 })
 
+app.use(async function verifyJwt(req,res,next) {
+  const { authorization: authHeader } = req.headers;
+
+  if (!authHeader) {
+    res.json('Invalid authorization, no authorization headers')
+  }
+
+  const [scheme, jwtToken] = authHeader.split('')
+
+  if (scheme !== 'Bearer') {
+    res.json('Invalid authorization, invalid authorization scheme')
+  }
+
+  try {
+    const decodedJwtObject = jwt.verify(jwtToken,process.ENV_JWT);
+    req.user = decodedJwtObject;
+  } catch (err) {
+    console.log(err)
+    if (
+      err.message && 
+      (err.message.toUpperCase() === 'INVALID TOKEN' || 
+      err.message.toUpperCase() === 'JWT EXPIRED')
+    ) {
+
+      req.status = err.status || 500;
+      req.body = err.message;
+      req.app.emit('jwt-error', err, req);
+    } else {
+
+      throw((err.status || 500), err.message);
+    }
+  }
+})
+
   app.get('/users', async function(req, res) {
     try {
     // query the database to fetch all cars where deleted_flag = 0
