@@ -85,7 +85,7 @@ app.post('/signin', async(req,res) => {
     const {email, password: userEnteredPassword } = req.body
 
     const [user] = req.db.query(
-      `SELECT name, username, email, password FROM Users WHERE email = :email`
+      `SELECT name, email, password FROM Users WHERE email = :email`
     )
 
     if (!user) {
