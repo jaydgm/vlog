@@ -20,14 +20,13 @@ function Signup() {
     }
 
     try {
-      const response = await fetch('http://localhost:3000/users', {
+      const response = await fetch('http://localhost:3000/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
           name,
-          username,
           email,
           password,
         }),
@@ -37,6 +36,25 @@ function Signup() {
     } catch (error) {
       console.error('error:', error)
     }
+  }
+
+  const handleSignin = async () => {
+    try {
+    const res = await fetch('http://localhost:3000/signin', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        username,
+        password
+      }),
+    })
+  } catch (err) {
+    console.log('Error: ', error)
+  }
+
+    const data = await res.json();
   }
 
   const handleRepeatPasswordChange = (event) => {
