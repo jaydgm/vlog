@@ -55,41 +55,63 @@ app.use(async (req, res, next) => {
 });
 
 app.post('/signup', async (req,res) => {
-  
+  try {
+    const {name, email, password} = req.body;
+
+    const hashedPassword = bcrypt.hash(password, 10);
+
+    const [user] = await req.db.query( 
+      `INSERT INTO Users (
+        name, email, password)
+      )
+      VALUES (
+        :name, :email, :password
+      )`,
+      { name, email, password: hashedPassword }
+    )
+
+    jwtEncodedUser = jwt.sign(
+      {userId: user.insertId, ...req.body}
+    )
+
+    res.json({jwt: jwtEncodedUser, success: true})
+  } catch (err) {
+    res.json({success: false, message: err})
+  }
 })
 
-app.post('/users', async function(req, res) {
-    try {
-      const {name, username, email, password} = req.body;
+app.post('/signin', async(req,res) => {
+  try {
+    const {email, password: userEnteredPassword } = req.body
 
-      const hashedPassword = await bcrypt.hash(password, 10);
-    
-      const query = await req.db.query(
-        `INSERT into Users (
-          name,
-          username,
-          email,
-          password
-        )
-        VALUES (
-          :name,
-          :username,
-          :email,
-          :password
-        )`,
-        {
-          name,
-          username,
-          email,
-          password: hashedPassword
-        }
-      );
-    
-      res.json({ success: true, message: 'User successfully created', data: null });
-    } catch (err) {
-      res.json({ success: false, message: err, data: null })
+    const [user] = req.db.query(
+      `SELECT name, username, email, password FROM Users WHERE email = :email`
+    )
+
+    if (!user) {
+      res.json({success: false, err: 'no user found'})
+      return;
     }
-  });
+
+    const hashedPassword = `${data.password}`
+    const passwordMatches = await bcrypt.compare(userEnteredPassword, hashedPassword)
+
+    if (passwordMatches) {
+      const payload = {
+        userId: user.id,
+        email: user.email,
+      }
+
+      const jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
+
+      res.json({jwt: jwtEncodedUser, success: true})
+    } else {
+      res.json({success: false, err: 'Passsword is incorrect'})
+    }
+  } catch (err) {
+    console.log('Error in /authenticate', err)
+  }
+})
 
   app.get('/users', async function(req, res) {
     try {
