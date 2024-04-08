@@ -1,11 +1,11 @@
 import { useState } from 'react'
+import { Link } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 
 function Signup() {
   const [name,setName] = useState('');
-  const [username,setUsername] = useState('')
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('')
   const [repeatPassword,setRepeatPassword] = useState('');
@@ -36,25 +36,6 @@ function Signup() {
     } catch (error) {
       console.error('error:', error)
     }
-  }
-
-  const handleSignin = async () => {
-    try {
-    const res = await fetch('http://localhost:3000/signin', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        username,
-        password
-      }),
-    })
-  } catch (err) {
-    console.log('Error: ', error)
-  }
-
-    const data = await res.json();
   }
 
   const handleRepeatPasswordChange = (event) => {
@@ -114,18 +95,17 @@ function Signup() {
                         {passwordMatchError && (
                           <div className="text-danger">Passwords do not match!</div>
                         )}
-                        <div className="form-check d-flex justify-content-center mb-5">
-                          <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3c" />
-                          <label className="form-check-label" htmlFor="form2Example3">
-                            I agree all statements in <a href="#!">Terms of service</a>
-                          </label>
-                        </div>
 
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button  
                             type="submit" 
                             className="btn btn-primary btn-lg"
                             >Register</button>
+                        </div>
+                        <div className="d-flex justify-content-center mb-5">
+                          <label className="form-check-label" htmlFor="form2Example3">
+                            Already have an account? <Link to="/login">Log in</Link>
+                          </label>
                         </div>
                       </form>
                     </div>
