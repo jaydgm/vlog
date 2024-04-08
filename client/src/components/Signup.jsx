@@ -11,7 +11,7 @@ function Signup() {
   const [repeatPassword,setRepeatPassword] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState(false)
   
-  const handleSubmit = async (event) => {
+  const handleSignup = async (event) => {
     event.preventDefault();
 
     if (password !== repeatPassword) {
@@ -77,7 +77,7 @@ function Signup() {
 
                       <form 
                         className="mx-1 mx-md-4"
-                        onSubmit={handleSubmit}
+                        onSubmit={handleSignup}
                         >
 
                         <div className="d-flex flex-row align-items-center mb-4">
