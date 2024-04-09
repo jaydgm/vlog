@@ -24,8 +24,8 @@ function Signup() {
     }
 
     if (password !== repeatPassword) {
-      setPasswordMatchError(true)
-      return;
+      window.alert('passwords do not match')
+      return
     }
 
     try {
@@ -97,14 +97,11 @@ function Signup() {
                         <div className="d-flex flex-row align-items-center mb-4">
                           <FontAwesomeIcon icon={faKey} className="fa-lg me-3 fa-fw" />
                           <div className="form-outline flex-fill mb-0">
-                            <input type="password" id="form3Example4cd" className="form-control" onChange={handleRepeatPasswordChange}/>
+                            <input type="password" id="form3Example4cd" className="form-control" onChange={(e) => setRepeatPassword(e.target.value)}/>
                             <label className="form-label" htmlFor="form3Example4cd">Repeat your password</label>
                           </div>
                         </div>
-                        {passwordMatchError && (
-                          <div className="text-danger">Passwords do not match!</div>
-                        )}
-
+                        
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button  
                             type="submit" 
