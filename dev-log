@@ -33,3 +33,6 @@
 - add jwt authentication
 - add routing and links from/to sign up page and sign in page
 - revise database (remove username property)
+
+4/8/24 10am - 1pm
+- add sign in / sign up check for password and email
