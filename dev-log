@@ -29,3 +29,7 @@
 - add bootstrap for styling
 - revise database 
 
+4/8/24 8am - 1pm
+- add jwt authentication
+- add routing and links from/to sign up page and sign in page
+- revise database (remove username property)
