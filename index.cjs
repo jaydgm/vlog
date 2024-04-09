@@ -70,14 +70,18 @@ app.post('/signup', async (req,res) => {
       email
     });
 
+    // create payload for the jwt
     const payload = {
       user_id: userData.user_id,
       email: userData.email
     }
 
-
+    // creates the jwt for the user
+    // makes jwt unique for all users since all users would 
+    // have same JWY_KEY
     jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
 
+    // response with the jwt and userData
     res.json({jwt: jwtEncodedUser, success: true, userData: payload})
   } catch (err) {
     res.json({success: false, message: err})
@@ -101,13 +105,15 @@ app.post('/signin', async(req,res) => {
     const hashedPassword = `${data.password}`
     const passwordMatches = await bcrypt.compare(userEnteredPassword, hashedPassword)
 
+    // if passsword matches, create payload for 
+    // the jwt with the user info
     if (passwordMatches) {
       const payload = {
         userId: user.id,
         email: user.email,
       }
 
-      const jwtToken = jwt.sign(payload, process.env.JWT_KEY)
+      const jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
       res.json({success: true, jwt: jwtToken, data: payload})
     } else {
       res.json({success: false, err: 'Passsword is incorrect'})
