@@ -117,6 +117,18 @@ app.post('/signin', async(req,res) => {
   }
 })
 
+app.delete('/users/:userId', async function(req,res) {
+  try {
+    const userId = req.params.userId;
+    
+    await req.db.query('DELETE FROM Users WHERE user_id = ?', [userId])
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (err) {
+    console.log('Error deleting user: ', err)
+    res.status(500).json({success: false, message: err})
+  }
+})
+
 app.get('/users', async function(req, res) {
   try {
   // query the database to fetch all cars where deleted_flag = 0
@@ -130,6 +142,7 @@ app.get('/users', async function(req, res) {
     res.status(500).json({success: false, message: 'internal server error'})
   }
 });
+
 
 app.use(async function verifyJwt(req,res,next) {
   const { authorization: authHeader } = req.headers;
