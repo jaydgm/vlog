@@ -1,8 +1,9 @@
 import { useState } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
+import { setJwt } from '../auth/jwt';
 
 function Signup() {
   const [name,setName] = useState('');
@@ -10,10 +11,12 @@ function Signup() {
   const [password,setPassword] = useState('')
   const [repeatPassword,setRepeatPassword] = useState('');
   const [passwordMatchError, setPasswordMatchError] = useState(false)
+
+  const navigate = useNavigate();
   
   const handleSignup = async (event) => {
     if (name === "") {
-      window.alert("mssing name")
+      window.alert("missing name")
       return
     } else if (email === "") {
       window.alert('missing email') 
@@ -42,15 +45,21 @@ function Signup() {
       })
 
       const data = await response.json()
+
+      console.log('test')
+      // if successful and a jwt token are true
+      // save token & navigate to dashboard
+      if (data.success && data.jwt) {
+        setJwt(data.jwt);
+        navigate('/vlog')
+      } else {
+        window.alert(`error creating user: ${data.error}`)
+      }
+
     } catch (error) {
-      console.error('error:', error)
+      console.log('error:', error)
     }
   }
-
-  const handleRepeatPasswordChange = (event) => {
-    setRepeatPassword(event.target.value);
-    setPasswordMatchError(password !== event.target.value);
-  };
 
   return (
     <>
@@ -67,7 +76,6 @@ function Signup() {
 
                       <form 
                         className="mx-1 mx-md-4"
-                        onSubmit={handleSignup}
                         >
 
                         <div className="d-flex flex-row align-items-center mb-4">
@@ -101,12 +109,14 @@ function Signup() {
                             <label className="form-label" htmlFor="form3Example4cd">Repeat your password</label>
                           </div>
                         </div>
-                        
+
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button  
                             type="submit" 
                             className="btn btn-primary btn-lg"
-                            >Register</button>
+                            onClick={handleSignup}
+                            >Register
+                            </button>
                         </div>
                         <div className="d-flex justify-content-center mb-5">
                           <label className="form-check-label" htmlFor="form2Example3">
