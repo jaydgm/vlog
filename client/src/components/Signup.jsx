@@ -12,7 +12,16 @@ function Signup() {
   const [passwordMatchError, setPasswordMatchError] = useState(false)
   
   const handleSignup = async (event) => {
-    event.preventDefault();
+    if (name === "") {
+      window.alert("mssing name")
+      return
+    } else if (email === "") {
+      window.alert('missing email') 
+      return
+    } else if (password === "") {
+      window.alert('missing password')
+      return
+    }
 
     if (password !== repeatPassword) {
       setPasswordMatchError(true)
