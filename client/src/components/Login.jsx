@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { setJwt } from "../auth/jwt";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -32,12 +32,12 @@ function Login() {
         })
 
         const data = await res.json()
-
+        
         // if successful and a jwt token are true
         // save token & navigate to dashboard
         if (data.success && data.jwt) {
           setJwt(data.jwt)
-          navigate("/vlog")
+          useNavigate("/vlog")
         } else {
           window.alert(`error signing in: ${data.err}`)
         }
