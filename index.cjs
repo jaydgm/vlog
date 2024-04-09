@@ -58,25 +58,30 @@ app.post('/signup', async (req,res) => {
   try {
     const {name, email, password} = req.body;
 
-    const hashedPassword = bcrypt.hash(password, 10);
+    const hashedPassword = await bcrypt.hash(password, 10);
 
     const [user] = await req.db.query( 
-      `INSERT INTO Users (
-        name, email, password)
-      )
-      VALUES (
-        :name, :email, :password
-      )`,
-      { name, email, password: hashedPassword }
+      `INSERT INTO Users (name, email, password) 
+      VALUES (:name, :email, :hashedPassword);`, 
+      { name, email, hashedPassword }
     )
 
-    jwtEncodedUser = jwt.sign(
-      {userId: user.insertId, ...req.body}
-    )
+    const [[userData]] = await req.db.query(`SELECT user_id, email FROM Users WHERE email = :email`, {
+      email
+    });
 
-    res.json({jwt: jwtEncodedUser, success: true})
+    const payload = {
+      user_id: userData.user_id,
+      email: userData.email
+    }
+
+
+    jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
+
+    res.json({jwt: jwtEncodedUser, success: true, userData: payload})
   } catch (err) {
     res.json({success: false, message: err})
+    console.log(`Error creating user ${err}`)
   }
 })
 
@@ -102,9 +107,8 @@ app.post('/signin', async(req,res) => {
         email: user.email,
       }
 
-      const jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
-
-      res.json({jwt: jwtEncodedUser, success: true})
+      const jwtToken = jwt.sign(payload, process.env.JWT_KEY)
+      res.json({success: true, jwt: jwtToken, data: payload})
     } else {
       res.json({success: false, err: 'Passsword is incorrect'})
     }
@@ -113,6 +117,20 @@ app.post('/signin', async(req,res) => {
   }
 })
 
+app.get('/users', async function(req, res) {
+  try {
+  // query the database to fetch all cars where deleted_flag = 0
+  const [rows] = await req.db.query('SELECT * FROM Users')
+
+  // send fetched data to client
+  res.json({success: true, data: rows})
+  } catch (err) {
+    // handle errors
+    console.error('error fetching users:', err)
+    res.status(500).json({success: false, message: 'internal server error'})
+  }
+});
+
 app.use(async function verifyJwt(req,res,next) {
   const { authorization: authHeader } = req.headers;
 
@@ -120,14 +138,14 @@ app.use(async function verifyJwt(req,res,next) {
     res.json('Invalid authorization, no authorization headers')
   }
 
-  const [scheme, jwtToken] = authHeader.split('')
+  const [scheme, jwtToken] = authHeader.split(' ')
 
   if (scheme !== 'Bearer') {
     res.json('Invalid authorization, invalid authorization scheme')
   }
 
   try {
-    const decodedJwtObject = jwt.verify(jwtToken,process.ENV_JWT);
+    const decodedJwtObject = jwt.verify(jwtToken,process.env.JWT_KEY);
     req.user = decodedJwtObject;
   } catch (err) {
     console.log(err)
@@ -146,19 +164,5 @@ app.use(async function verifyJwt(req,res,next) {
     }
   }
 })
-
-  app.get('/users', async function(req, res) {
-    try {
-    // query the database to fetch all cars where deleted_flag = 0
-    const [rows] = await req.db.query('SELECT * FROM Users')
-  
-    // send fetched data to client
-    res.json({success: true, data: rows})
-    } catch (err) {
-      // handle errors
-      console.error('error fetching users:', err)
-      res.status(500).json({success: false, message: 'internal server error'})
-    }
-  });
 
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
