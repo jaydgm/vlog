@@ -10,14 +10,17 @@ import './index.css';
 import App from "./App.jsx";
 import Login from "./components/Login";
 import Signup from "./components/Signup.jsx";
+import Signup from "./components/Dashboard.jsx";
+
 
 
 const router = createBrowserRouter(
   createRoutesFromElements(
     <>
-      <Route path="/" element={<App />}>
-        <Route path='/' element={<Signup />} /> 
-        <Route path="login" element={<Login />} />
+      <Route path='/' element={<Signup />} /> 
+      <Route path="login" element={<Login />} />
+      <Route path="/vlog" element={<App />}>
+        <Route path="" element={<Dashboard.jsx />} />
       </Route>
     </>
   )
