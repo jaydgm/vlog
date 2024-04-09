@@ -102,7 +102,7 @@ app.post('/signin', async(req,res) => {
       return;
     }
 
-    const hashedPassword = `${data.password}`
+    const hashedPassword = `${user.password}`
     const passwordMatches = await bcrypt.compare(userEnteredPassword, hashedPassword)
 
     // if passsword matches, create payload for 
@@ -118,6 +118,7 @@ app.post('/signin', async(req,res) => {
     } else {
       res.json({success: false, err: 'Passsword is incorrect'})
     }
+    
   } catch (err) {
     console.log('Error in /authenticate', err)
   }
