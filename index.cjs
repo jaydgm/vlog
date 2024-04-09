@@ -81,6 +81,8 @@ app.post('/signup', async (req,res) => {
     // have same JWY_KEY
     jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
 
+    console.log(jwtEncodedUser)
+
     // response with the jwt and userData
     res.json({jwt: jwtEncodedUser, success: true, userData: payload})
   } catch (err) {
@@ -162,11 +164,14 @@ app.use(async function verifyJwt(req,res,next) {
 
   if (scheme !== 'Bearer') {
     res.json('Invalid authorization, invalid authorization scheme')
+    return
   }
 
   try {
-    const decodedJwtObject = jwt.verify(jwtToken,process.env.JWT_KEY);
+    const decodedJwtObject = jwt.verify(jwtToken, process.env.JWT_KEY);
+
     req.user = decodedJwtObject;
+
   } catch (err) {
     console.log(err)
     if (
@@ -183,6 +188,7 @@ app.use(async function verifyJwt(req,res,next) {
       throw((err.status || 500), err.message);
     }
   }
+  await next();
 })
 
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
