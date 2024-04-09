@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from 'react-router-dom';
+import { setJwt } from "../auth/jwt";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
@@ -9,7 +10,16 @@ function Login() {
     const [password,setPassword] = useState('')
 
     const handleSignin = async () => {
-        try {
+
+      if (!email) {
+        window.alert('missing email')
+        return
+      } else if (!password) {
+        window.alert('missing password')
+        return
+      }
+
+      try {
         const res = await fetch('http://localhost:3000/signin', {
           method: 'POST',
           headers: {
@@ -20,6 +30,18 @@ function Login() {
             password
           }),
         })
+
+        const data = await res.json()
+
+        // if successful and a jwt token are true
+        // save token & navigate to dashboard
+        if (data.success && data.jwt) {
+          setJwt(data.jwt)
+          navigate("/vlog")
+        } else {
+          window.alert(`error signing in: ${data.err}`)
+        }
+
       } catch (err) {
         console.log('Error: ', error)
       }
@@ -63,7 +85,8 @@ function Login() {
                             <button  
                                 type="submit" 
                                 className="btn btn-primary btn-lg"
-                                >Register</button>
+                                onClick={handleSignin}
+                                >Sign In</button>
                             </div>
                             <div className="d-flex justify-content-center mb-5">
                                 <label className="form-check-label" htmlFor="form2Example3">
