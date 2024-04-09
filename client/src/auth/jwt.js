@@ -9,7 +9,6 @@ export const setJwt = (jwt) => {
 
     localStorage.setItem("jwt", `Bearer ${jwt}`)
 }
-
 // clears local storage
 export const clearJwt = () => {
     localStorage.clear();
