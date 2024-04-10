@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
-import { setJwt } from '../auth/jwt';
+import { getJwt, setJwt } from '../auth/jwt';
 
 function Signup() {
   const [name,setName] = useState('');
@@ -44,9 +44,13 @@ function Signup() {
         }),
       })
 
-      const data = await response.json()
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
 
-      console.log('test')
+      const data = await response.json()
+      console.log('response: ', data)
+      
       // if successful and a jwt token are true
       // save token & navigate to dashboard
       if (data.success && data.jwt) {
@@ -55,6 +59,7 @@ function Signup() {
       } else {
         window.alert(`error creating user: ${data.error}`)
       }
+      
 
     } catch (error) {
       console.log('error:', error)
@@ -112,7 +117,7 @@ function Signup() {
 
                         <div className="d-flex justify-content-center mx-4 mb-3 mb-lg-4">
                           <button  
-                            type="submit" 
+                            type="button" 
                             className="btn btn-primary btn-lg"
                             onClick={handleSignup}
                             >Register
