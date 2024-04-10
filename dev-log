@@ -36,3 +36,10 @@
 
 4/8/24 10am - 1pm
 - add sign in / sign up check for password and email
+
+4/9/24 10am = 1pm
+- Fix bugs (navigate not working and jwt not being set to local storage)
+- resolved bug: button type was submit and not button
+
+4/10/24 9am - 12pm
+- add email check for sign up / sign in
