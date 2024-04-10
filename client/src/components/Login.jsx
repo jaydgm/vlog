@@ -9,6 +9,9 @@ function Login() {
     const [email,setEmail] = useState('');
     const [password,setPassword] = useState('')
 
+    const navigate = useNavigate();
+
+
     const handleSignin = async () => {
 
       if (!email) {
@@ -20,33 +23,32 @@ function Login() {
       }
 
       try {
-        const res = await fetch('http://localhost:3000/signin', {
+        const response = await fetch('http://localhost:3000/signin', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json'
           },
           body: JSON.stringify({
-            username,
+            email,
             password
           }),
         })
 
-        const data = await res.json()
+        const data = await response.json()
         
         // if successful and a jwt token are true
         // save token & navigate to dashboard
         if (data.success && data.jwt) {
           setJwt(data.jwt)
-          useNavigate("/vlog")
+          navigate("/vlog")
         } else {
-          window.alert(`error signing in: ${data.err}`)
+          window.alert('error signing in')
         }
 
       } catch (err) {
-        console.log('Error: ', error)
+        console.log('Error: ', err)
       }
-    
-        const data = await res.json();
+  
     }
 
     return (
