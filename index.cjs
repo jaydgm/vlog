@@ -103,7 +103,7 @@ app.post('/signin', async(req,res) => {
   try {
     const {email, password: userEnteredPassword } = req.body
 
-    const [user] = req.db.query(
+    const [[user]] = await req.db.query(
       `SELECT name, email, password FROM Users WHERE email = :email`, {email}
     )
 
@@ -118,16 +118,16 @@ app.post('/signin', async(req,res) => {
 
     // if passsword matches, create payload for 
     // the jwt with the user info
-    if (passwordMatches) {
+    if (!passwordMatches) {
+      res.json({ success: false, err: "Invalid Credentials" });
+    } else {
       const payload = {
         userId: user.id,
         email: user.email,
       }
 
       const jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
-      res.json({success: true, jwt: jwtToken, data: payload})
-    } else {
-      res.json({success: false, err: 'Passsword is incorrect'})
+      res.json({success: true, jwt: jwtEncodedUser, data: payload})
     }
     
   } catch (err) {
