@@ -104,7 +104,7 @@ app.post('/signin', async(req,res) => {
     const {email, password: userEnteredPassword } = req.body
 
     const [user] = req.db.query(
-      `SELECT name, email, password FROM Users WHERE email = :email`
+      `SELECT name, email, password FROM Users WHERE email = :email`, {email}
     )
 
     if (!user) {
@@ -112,6 +112,7 @@ app.post('/signin', async(req,res) => {
       return;
     }
 
+    // hash user password and compare with entered password
     const hashedPassword = `${user.password}`
     const passwordMatches = await bcrypt.compare(userEnteredPassword, hashedPassword)
 
