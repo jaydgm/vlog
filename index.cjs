@@ -55,36 +55,44 @@ app.use(async (req, res, next) => {
 });
 
 app.post('/signup', async (req,res) => {
+
   try {
     const {name, email, password} = req.body;
 
-    const hashedPassword = await bcrypt.hash(password, 10);
-
-    const [user] = await req.db.query( 
-      `INSERT INTO Users (name, email, password) 
-      VALUES (:name, :email, :hashedPassword);`, 
-      { name, email, hashedPassword }
+    const [[checkEmail]] = await req.db.query(
+      `SELECT email FROM Users WHERE email = :email`,
+      {email}
     )
 
-    const [[userData]] = await req.db.query(`SELECT user_id, email FROM Users WHERE email = :email`, {
-      email
-    });
+    if (checkEmail) {
+      res.json({success: false, err: 'email already in use'})
+    } else {
+      const hashedPassword = await bcrypt.hash(password, 10);
 
-    // create payload for the jwt
-    const payload = {
-      user_id: userData.user_id,
-      email: userData.email
+      await req.db.query( 
+        `INSERT INTO Users (name, email, password) 
+        VALUES (:name, :email, :hashedPassword);`, 
+        { name, email, hashedPassword }
+      )
+      const [[userData]] = await req.db.query(
+        `SELECT user_id, email FROM Users WHERE email = :email`, {email}
+      );
+      // create payload for the jwt
+      const payload = {
+        user_id: userData.user_id,
+        email: userData.email
+      }
+
+      // creates the jwt for the user
+      // makes jwt unique for all users since all users would 
+      // have same JWY_KEY
+      jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
+
+      console.log(jwtEncodedUser)
+
+      // response with the jwt and userData
+      res.json({jwt: jwtEncodedUser, success: true, userData: payload})
     }
-
-    // creates the jwt for the user
-    // makes jwt unique for all users since all users would 
-    // have same JWY_KEY
-    jwtEncodedUser = jwt.sign(payload, process.env.JWT_KEY)
-
-    console.log(jwtEncodedUser)
-
-    // response with the jwt and userData
-    res.json({jwt: jwtEncodedUser, success: true, userData: payload})
   } catch (err) {
     res.json({success: false, message: err})
     console.log(`Error creating user ${err}`)
