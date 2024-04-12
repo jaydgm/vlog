@@ -6,7 +6,7 @@ import { getJwt } from "../auth/jwt";
 
 function Dashboard() {
 
-    handleScheduler = async () => {
+    const handleScheduler = async () => {
         const jwt = getJwt();
     }
 
