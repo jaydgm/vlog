@@ -3,26 +3,21 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
+import { useNavigate } from 'react-router';
 
 function Dashboard() {
 
-    const handleScheduler = async () => {
-        const jwt = getJwt();
-    }
+    const navigate = useNavigate()
 
     return (
         <>
-            {/* navbar */}
-            <nav className="navbar navbar-light bg-dark d-flex justify-content-center">
-                <span className="navbar-brand mb-0 h1 text-light">VLog</span>
-            </nav>
             {/* hero */}
-            <div className="d-flex justify-content-center">
+            <div className="heroContainer d-flex justify-content-center align-items-center">
                 <button 
-                    type="button" 
-                    onClick={handleScheduler}
-                    className="btn btn-danger btn-lg">Schedule a meeting
-                </button>
+                    className="scheduleBtn rounded-pill" 
+                    type="button"
+                    onClick={() => navigate('/vlog/schedule-meeting')}>
+                    Schedule Meeting</button>
             </div>
         </>
     )
