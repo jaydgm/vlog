@@ -200,4 +200,26 @@ app.use(async function verifyJwt(req,res,next) {
   await next();
 })
 
+// endpoint for only registered users to access scheduler page
+app.get("/scheduler", async function(req, res) {
+  // Only authenticated users can access this endpoint
+  try {
+    res.json({success: true, message: "Scheduler page accessed successfully" });
+  } catch (error) {
+    res.json({success: false, error: error})
+  }
+});
+
+// endpoint to get all members
+app.post('/members', async function(req, res) {
+  try {
+    const [rows] = await req.db.query(`SELECT * FROM Members`)
+    
+    res.json({success: true, data: rows})
+  } catch (error) {
+    console.log('error fetching members')
+    res.json({success: false, error: error})
+  }
+})
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
