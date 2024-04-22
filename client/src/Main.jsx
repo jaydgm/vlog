@@ -23,7 +23,7 @@ const Main = () => {
         <Route path="/vlog" element={<Layout />}>
           {/* Define nested routes relative to /vlog */}
           <Route index element={<Dashboard />} />
-          <Route path="schedule-meeting" element={<Scheduler />} />
+          <Route path="new" element={<Scheduler />} />
         </Route>
       </Routes>
     </BrowserRouter>
