@@ -27,7 +27,7 @@ function Dashboard() {
         data.err === "Invalid authorization, invalid authorization scheme") {
             console.log('Error authenticating jwt')
         } else if (data.success) {
-            navigate()
+            navigate('/vlog/new')
         }
         
         } catch (error) {
