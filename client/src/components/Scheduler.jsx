@@ -11,11 +11,14 @@ function Scheduler() {
     const [members, setMembers] = useState([]);
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
+    const [users, setUsers] = useState([]);
+    const [attendees, setAttendees] = useState([])
     const jwt = getJwt();
 
 
     useEffect(() => {
         fetchMembers();
+        fetchUsers();
     }, []);
 
     const fetchMembers = async () => {
@@ -40,12 +43,44 @@ function Scheduler() {
         }
     };
 
+    const fetchUsers = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/users', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': jwt,
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(data.data)
+                setUsers(data.data);
+            } else {
+                console.error("Failed to fetch members");
+            }
+            
+        } catch (error) {
+            console.error("Error fetching members:", error);
+        }
+    };
+
+    const handleAddAttendee = (userId) => {
+        const user = users.find(user => user.id === userId);
+        if (user) {
+            setAttendees(prevAttendees => [...prevAttendees, user]);
+        }
+    };
+
     const handleSchedule = () => {
         // Implement your schedule logic here
         console.log(selectedItem);
         console.log(selectedDate)
         console.log(selectedTime)
+        console.log(attendees)
     };
+
 
     return (
         <>
@@ -85,6 +120,25 @@ function Scheduler() {
                             onChange={(e) => {setSelectedTime(e.target.value)}}
                         />
                     </Form.Group>
+                </div>
+            </div>
+                            {/* add attendees */}
+                            <div>
+                <h4>Add attendees:</h4>
+                <ul className="list-group">
+                    {users.map(user => (
+                        <li key={user.user_id} className="list-group-item" onClick={() => handleAddAttendee(user.id)}>
+                            {user.name}
+                        </li>
+                    ))}
+                </ul>
+                <div>
+                    <strong>Selected Attendees:</strong>
+                    <ul>
+                        {attendees.map(attendee => (
+                            <li key={attendee.id}>{attendee.name}</li>
+                        ))}
+                    </ul>
                 </div>
             </div>
             {/* schedule button */}
