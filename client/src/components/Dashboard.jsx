@@ -8,6 +8,7 @@ import { useNavigate } from 'react-router';
 function Dashboard() {
 
     const navigate = useNavigate()
+    const jwt = getJwt();
 
     const handleScheduler = async () => {
         try {
@@ -15,20 +16,22 @@ function Dashboard() {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
-            'authorization': `Bearer ${getJwt}`
+            'authorization': jwt,
           },
         })
 
         const data = await response.json()
 
-        if (data.success && data.jwt) {
-            navigate('/vlog/new')
-        } else{
+        
+        if (data.err === "Invalid authorization, no authorization headers" || 
+        data.err === "Invalid authorization, invalid authorization scheme") {
             console.log('Error authenticating jwt')
+        } else if (data.success) {
+            navigate()
         }
         
         } catch (error) {
-
+            console.log(error)
         }
     }
 
