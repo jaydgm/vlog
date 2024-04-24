@@ -16,5 +16,6 @@ export const clearJwt = () => {
 
 // gets jwt in local storage
 export const getJwt = () => {
-    return localStorage.getItem("jwt");
+    const jwt = localStorage.getItem("jwt");
+    return jwt
 }
