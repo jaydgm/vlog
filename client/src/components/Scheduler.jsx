@@ -12,6 +12,7 @@ function Scheduler() {
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
     const [users, setUsers] = useState([]);
+    const [selectedAttendee, setSelectedAttendee] = useState('');
     const [attendees, setAttendees] = useState([])
     const jwt = getJwt();
 
@@ -55,8 +56,8 @@ function Scheduler() {
 
             if (response.ok) {
                 const data = await response.json();
-                console.log(data.data)
                 setUsers(data.data);
+                console.log(data.data)
             } else {
                 console.error("Failed to fetch members");
             }
@@ -66,11 +67,8 @@ function Scheduler() {
         }
     };
 
-    const handleAddAttendee = (userId) => {
-        const user = users.find(user => user.id === userId);
-        if (user) {
-            setAttendees(prevAttendees => [...prevAttendees, user]);
-        }
+    const handleAddAttendee = (user) => {
+        setAttendees(prevAttendees => [...prevAttendees, user]);
     };
 
     const handleSchedule = () => {
@@ -122,25 +120,27 @@ function Scheduler() {
                     </Form.Group>
                 </div>
             </div>
-                            {/* add attendees */}
-                            <div>
-                <h4>Add attendees:</h4>
-                <ul className="list-group">
-                    {users.map(user => (
-                        <li key={user.user_id} className="list-group-item" onClick={() => handleAddAttendee(user.id)}>
-                            {user.name}
-                        </li>
-                    ))}
-                </ul>
+            {/* Attendees dropdown */}
+            <Form.Label>Select Attendee(s)</Form.Label>
+            <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                {selectedAttendee ? selectedAttendee : "Choose an attendee"}
+            </button>
+            <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton2">
+                {users.map(user => (
+                    <li key={user.user_id}>
+                        <a className="dropdown-item" href="#" onClick={() => handleAddAttendee(user)}>{user.name}</a>
+                    </li>
+                ))}
+            </ul>
                 <div>
-                    <strong>Selected Attendees:</strong>
+                    <strong>Attendees:</strong>
                     <ul>
                         {attendees.map(attendee => (
                             <li key={attendee.id}>{attendee.name}</li>
                         ))}
                     </ul>
                 </div>
-            </div>
+                
             {/* schedule button */}
             <button variant="primary" onClick={handleSchedule}>Schedule</button>
     </div>
