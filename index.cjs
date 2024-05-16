@@ -218,9 +218,59 @@ app.get('/users', async function(req, res) {
   } catch (err) {
     // handle errors
     console.error('error fetching users:', err)
-    res.status(500).json({success: false, message: 'internal server error'})
+    res.json({success: false, message: 'internal server error'})
   }
 });
 
+app.post('/schedule-visitation', async function(req, res) { 
+  try {
+    const { user_id: host_id } = req.user;
+    const { visit_date, attendee: visitor_id } = req.body;
+
+    await req.db.query(`
+      INSERT INTO Visitations(host_id, visitor_id, visit_date)
+      VALUES (:host_id, :visitor_id, :visit_date);
+    `, {host_id, visitor_id, visit_date
+    });
+
+    res.json({ success: true, message: 'Visitation created successfully' });
+  } catch (err) {
+    console.log(err);
+    res.json({ success: false, message: 'Internal server error' });
+  }
+});
+
+
+app.get('/visitations', async function(req, res) {
+  const { user_id: visitor } = req.user;
+  const { member, visit_date, attendee: name } = req.body;
+  try {
+    const [rows] = await req.db.query( `SELECT
+                                        Visitations.visit_date,
+                                        Members.name AS host_name,
+                                        GROUP_CONCAT(Users.name) AS attendee_names
+                                      FROM
+                                        Visitations
+                                      INNER JOIN
+                                        Members ON Visitations.host_id = Members.member_id
+                                      INNER JOIN
+                                        Attendees ON Visitations.visitation_id = Attendees.visit_id
+                                      INNER JOIN
+                                        Users ON Attendees.attendee_id = Users.user_id
+                                      WHERE
+                                        Visitations.visit_date = :visit_date AND
+                                        Members.name = :member AND
+                                        Users.name = :attendee
+                                      GROUP BY
+                                        Visitations.visitation_id;
+                                      ;`, {
+                                        visit_date, member, attendee: name
+                                      })
+      res.json({success: true, data: rows})
+    } catch (err) {
+      console.log(err)
+      res.json({success: false, message: 'internal server error'})
+    }
+  })
 
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
