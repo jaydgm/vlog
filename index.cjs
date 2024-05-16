@@ -273,4 +273,22 @@ app.get('/visitations', async function(req, res) {
     }
   })
 
+  app.post('/add-attendee', async function(req, res) {
+    try {
+      const { user_id } = req.user;
+      const { visit_id, attendee_id } = req.body;
+
+      await req.db.query(`
+                          INSERT INTO Attendees (visit_id, attendee_id)
+                          VALUES (:visit_id, :attendee_id)`, {
+                            visit_id, attendee_id
+                          })
+
+      res.json({ success: true, message: 'Attendee added successfully' });
+    } catch (err) {
+      console.log(err)
+      res.json({ success: false, err: err});
+    }
+  })
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
