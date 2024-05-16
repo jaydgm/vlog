@@ -67,6 +67,37 @@ function Scheduler() {
         }
     };
 
+    const scheduleVisitation = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/schedule-visitation', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': jwt,
+                },
+                body: {
+                    host_id: selectedItem,
+                    visit_date: selectedDate,
+                    visitor_id: users.user_id
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+            } else {
+                console.error("Failed to create visitation");
+            }
+            
+        } catch (error) {
+            console.error("Error fetching members:", error);
+        }
+    };
+
+    const addAttendees = async () => {
+    
+    }
+    
+
     const handleAddAttendee = (user) => {
         setAttendees(prevAttendees => [...prevAttendees, user]);
     };
