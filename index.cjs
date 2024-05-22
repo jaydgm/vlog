@@ -222,15 +222,20 @@ app.get('/users', async function(req, res) {
   }
 });
 
+// endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
   try {
-    const { user_id: host_id } = req.user;
-    const { visit_date, attendee: visitor_id } = req.body;
+    const { user_id: visitor_id } = req.user;
+    const { visit_date } = req.body;
 
     await req.db.query(`
-      INSERT INTO Visitations(host_id, visitor_id, visit_date)
-      VALUES (:host_id, :visitor_id, :visit_date);
-    `, {host_id, visitor_id, visit_date
+    INSERT INTO Visitations (host_id, visitor_id, visit_date, visit_time)
+    VALUES (:host_id, :visitor_id, :visit_date, :visit_time);
+  `, {
+      host_id,
+      visitor_id,
+      visit_date,
+      visit_time
     });
 
     res.json({ success: true, message: 'Visitation created successfully' });
@@ -240,7 +245,7 @@ app.post('/schedule-visitation', async function(req, res) {
   }
 });
 
-
+// endpoint to get visitations (name, attendees, date)
 app.get('/visitations', async function(req, res) {
   const { user_id: visitor } = req.user;
   const { member, visit_date, attendee: name } = req.body;
@@ -273,6 +278,7 @@ app.get('/visitations', async function(req, res) {
     }
   })
 
+  // endpoint to add an attendee 
   app.post('/add-attendee', async function(req, res) {
     try {
       const { user_id } = req.user;
