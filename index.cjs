@@ -101,10 +101,11 @@ app.post('/signup', async (req,res) => {
 
 app.post('/signin', async(req,res) => {
   try {
+
     const {email, password: userEnteredPassword } = req.body
 
     const [[user]] = await req.db.query(
-      `SELECT name, email, password FROM Users WHERE email = :email`, {email}
+      `SELECT user_id, name, email, password FROM Users WHERE email = :email`, {email}
     )
 
     if (!user) {
@@ -122,7 +123,7 @@ app.post('/signin', async(req,res) => {
       res.json({ success: false, err: "Invalid Credentials" });
     } else {
       const payload = {
-        userId: user.user_id,
+        user_id: user.user_id,
         email: user.email,
       }
 
@@ -135,11 +136,11 @@ app.post('/signin', async(req,res) => {
   }
 })
 
-app.delete('/users/:userId', async function(req,res) {
+app.delete('/users/:user_id', async function(req,res) {
   try {
-    const userId = req.params.userId;
+    const user_id = req.params.user_id;
     
-    await req.db.query('DELETE FROM Users WHERE user_id = ?', [userId])
+    await req.db.query('DELETE FROM Users WHERE user_id = ?', [user_id])
     res.json({ success: true, message: 'User deleted successfully' });
   } catch (err) {
     console.log('Error deleting user: ', err)
@@ -164,7 +165,12 @@ app.use(async function verifyJwt(req,res,next) {
   try {
     const decodedJwtObject = jwt.verify(jwtToken, process.env.JWT_KEY);
 
-    req.user = decodedJwtObject;
+    req.user = {
+      user_id: decodedJwtObject.user_id,
+      email: decodedJwtObject.email,
+    }
+
+    await next();
 
   } catch (err) {
     console.log(err)
@@ -182,7 +188,6 @@ app.use(async function verifyJwt(req,res,next) {
       throw((err.status || 500), err.message);
     }
   }
-  await next();
 })
 
 // endpoint for only registered users to access scheduler page
@@ -225,9 +230,10 @@ app.get('/users', async function(req, res) {
 // endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
   try {
-
+    console.log(req.user)
     const { host_id, visit_date, visit_time} = req.body;
-    visitor_id = req.user.userId
+    const visitor_id = req.user.user_id
+
 
     await req.db.query(`
     INSERT INTO Visitations (host_id, visitor_id, visit_date, visit_time)
@@ -283,8 +289,8 @@ app.get('/visitations', async function(req, res) {
   // endpoint to add an attendee 
   app.post('/add-attendees', async function(req, res) {
     try {
-      const { user_id } = req.user;
       const { visit_id, attendee_id } = req.body;
+
 
       await req.db.query(`
                           INSERT INTO Attendees (visit_id, attendee_id)
