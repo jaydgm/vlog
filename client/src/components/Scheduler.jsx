@@ -7,8 +7,8 @@ import { getJwt } from "../auth/jwt";
 import { Form } from 'react-bootstrap';
 
 function Scheduler() {
-    const [selectedItem, setSelectedItem] = useState('');
     const [members, setMembers] = useState([]);
+    const [selectedMember, setSelectedMember] = useState('');
     const [selectedDate, setSelectedDate] = useState('');
     const [selectedTime, setSelectedTime] = useState('');
     const [users, setUsers] = useState([]);
@@ -57,7 +57,6 @@ function Scheduler() {
             if (response.ok) {
                 const data = await response.json();
                 setUsers(data.data);
-                console.log(data.data)
             } else {
                 console.error("Failed to fetch members");
             }
@@ -70,16 +69,16 @@ function Scheduler() {
     const scheduleVisitation = async () => {
         try {
             const response = await fetch('http://localhost:3000/schedule-visitation', {
-                method: "GET",
+                method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                     'authorization': jwt,
                 },
-                body: {
-                    host_id: selectedItem,
+                body: JSON.stringify({
+                    host_id: selectedMember.member_id,
                     visit_date: selectedDate,
-                    visitor_id: users.user_id
-                }
+                    visit_time: selectedTime,
+                })
             });
 
             if (response.ok) {
@@ -94,20 +93,45 @@ function Scheduler() {
     };
 
     const addAttendees = async () => {
-    
+        try {
+            const response = await fetch('http://localhost:3000/add-attendees', {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': jwt,
+                },
+                body: {
+                    host_id: selectedMember,
+                    visit_date: selectedDate,
+                    visitor_id: users.user_id
+                }
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+            } else {
+                console.error("Failed to create visitation");
+            }
+            
+        } catch (error) {
+            console.error("Error fetching members:", error);
+        }
     }
     
 
     const handleAddAttendee = (user) => {
+        if (!attendees.includes(user)) {
         setAttendees(prevAttendees => [...prevAttendees, user]);
+        }
     };
 
     const handleSchedule = () => {
         // Implement your schedule logic here
-        console.log(selectedItem);
+        console.log(selectedMember);
         console.log(selectedDate)
         console.log(selectedTime)
         console.log(attendees)
+        // scheduleVisitation();
     };
 
 
@@ -117,12 +141,12 @@ function Scheduler() {
             {/* members dropdown */}
             <Form.Label>Select Member</Form.Label>
             <button className="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false"> 
-                {selectedItem ? selectedItem : "Choose a member"}
+                {selectedMember.member ? selectedMember.member : "Choose a member"}
             </button>
             <ul className="dropdown-menu" aria-labelledby="dropdownMenuButton1">
                 {members.map(member => (
                     <li key={member.member_id}>
-                        <a className="dropdown-item" href="#" onClick={() => setSelectedItem(member.member)}>{member.member}</a>
+                        <a className="dropdown-item" href="#" onClick={() => setSelectedMember(member)}>{member.member}</a>
                     </li>
                 ))}
             </ul>
