@@ -122,7 +122,7 @@ app.post('/signin', async(req,res) => {
       res.json({ success: false, err: "Invalid Credentials" });
     } else {
       const payload = {
-        userId: user.id,
+        userId: user.user_id,
         email: user.email,
       }
 
@@ -225,8 +225,9 @@ app.get('/users', async function(req, res) {
 // endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
   try {
-    const { user_id: visitor_id } = req.user;
-    const { visit_date } = req.body;
+
+    const { host_id, visit_date, visit_time} = req.body;
+    visitor_id = req.user.userId
 
     await req.db.query(`
     INSERT INTO Visitations (host_id, visitor_id, visit_date, visit_time)
@@ -248,7 +249,7 @@ app.post('/schedule-visitation', async function(req, res) {
 // endpoint to get visitations (name, attendees, date)
 app.get('/visitations', async function(req, res) {
   const { user_id: visitor } = req.user;
-  const { member, visit_date, attendee: name } = req.body;
+  const { member, visit_date, visit_time, attendee: name } = req.body;
   try {
     const [rows] = await req.db.query( `SELECT
                                         Visitations.visit_date,
@@ -263,13 +264,14 @@ app.get('/visitations', async function(req, res) {
                                       INNER JOIN
                                         Users ON Attendees.attendee_id = Users.user_id
                                       WHERE
+                                        Visitations.visit_time = :visit_time AND
                                         Visitations.visit_date = :visit_date AND
                                         Members.name = :member AND
-                                        Users.name = :attendee
+                                        Users.name = :attendee 
                                       GROUP BY
                                         Visitations.visitation_id;
                                       ;`, {
-                                        visit_date, member, attendee: name
+                                        visit_time, visit_date, member, attendee: name
                                       })
       res.json({success: true, data: rows})
     } catch (err) {
@@ -279,7 +281,7 @@ app.get('/visitations', async function(req, res) {
   })
 
   // endpoint to add an attendee 
-  app.post('/add-attendee', async function(req, res) {
+  app.post('/add-attendees', async function(req, res) {
     try {
       const { user_id } = req.user;
       const { visit_id, attendee_id } = req.body;
