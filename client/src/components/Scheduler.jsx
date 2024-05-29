@@ -132,6 +132,7 @@ function Scheduler() {
         console.log(selectedDate)
         console.log(selectedTime)
         console.log(attendees)
+        scheduleVisitation()
         // scheduleVisitation();
     };
 
