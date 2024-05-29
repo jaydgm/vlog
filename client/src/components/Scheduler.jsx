@@ -82,7 +82,8 @@ function Scheduler() {
             });
 
             if (response.ok) {
-                const data = await response.json();
+                const { visitation_id } = await response.json();
+                addAttendees(visitation_id)
             } else {
                 console.error("Failed to create visitation");
             }
@@ -92,27 +93,27 @@ function Scheduler() {
         }
     };
 
-    const addAttendees = async () => {
+    const addAttendees = async (visitation_id) => {
         try {
-            const response = await fetch('http://localhost:3000/add-attendees', {
-                method: "GET",
-                headers: {
-                    "Content-Type": "application/json",
-                    'authorization': jwt,
-                },
-                body: {
-                    host_id: selectedMember,
-                    visit_date: selectedDate,
-                    visitor_id: users.user_id
-                }
-            });
+            for (const attendee of attendees) {
+                const response = await fetch('http://localhost:3000/add-attendees', {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'authorization': jwt,
+                    },
+                    body: JSON.stringify({
+                        visit_id: visitation_id,
+                        attendee_id: attendee.user_id,
+                    })
+                });
 
-            if (response.ok) {
-                const data = await response.json();
-            } else {
-                console.error("Failed to create visitation");
+                if (response.ok) {
+                    const data = await response.json();
+                } else {
+                    console.error("Failed to create visitation");
+                }
             }
-            
         } catch (error) {
             console.error("Error fetching members:", error);
         }
