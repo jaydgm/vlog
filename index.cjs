@@ -256,15 +256,16 @@ app.post('/schedule-visitation', async function(req, res) {
   }
 });
 
-// endpoint to get visitations (name, attendees, date)
-app.get('/visitations', async function(req, res) {
+// endpoint to get visitations (name, attendees, time, date)
+app.get('/show-visitations', async function(req, res) {
   const { user_id: visitor } = req.user;
-  const { member, visit_date, visit_time, attendee: name } = req.body;
+
   try {
     const [rows] = await req.db.query( `SELECT
                                         Visitations.visit_date,
-                                        Members.name AS host_name,
-                                        GROUP_CONCAT(Users.name) AS attendee_names
+                                        Visitations.visit_time,
+                                        Members.member,
+                                        GROUP_CONCAT( DISTINCT Users.name) as attendees
                                       FROM
                                         Visitations
                                       INNER JOIN
@@ -274,16 +275,26 @@ app.get('/visitations', async function(req, res) {
                                       INNER JOIN
                                         Users ON Attendees.attendee_id = Users.user_id
                                       WHERE
-                                        Visitations.visit_time = :visit_time AND
-                                        Visitations.visit_date = :visit_date AND
-                                        Members.name = :member AND
-                                        Users.name = :attendee 
+                                        Visitations.visitation_id IN (
+                                          SELECT
+                                            Visitations.visitation_id
+                                          FROM
+                                            Visitations
+                                          INNER JOIN 
+                                            Attendees ON Visitations.visitation_id = Attendees.visit_id
+                                          WHERE
+                                            Attendees.attendee_id = :visitor
+                                        )
                                       GROUP BY
-                                        Visitations.visitation_id;
+                                        Visitations.visitation_id,
+                                        Visitations.visit_date,
+                                        Visitations.visit_time,
+                                        Members.member;
                                       ;`, {
-                                        visit_time, visit_date, member, attendee: name
+                                        visitor
                                       })
       res.json({success: true, data: rows})
+      
     } catch (err) {
       console.log(err)
       res.json({success: false, message: 'internal server error'})
