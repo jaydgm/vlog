@@ -66,6 +66,7 @@ function Scheduler() {
         }
     };
 
+    // creates a new visitation upon scheduling 
     const scheduleVisitation = async () => {
         try {
             const response = await fetch('http://localhost:3000/schedule-visitation', {
@@ -81,9 +82,11 @@ function Scheduler() {
                 })
             });
 
+            // is response is successful, extract the visitatio_id to use in addAttendees
             if (response.ok) {
                 const { visitation_id } = await response.json();
                 addAttendees(visitation_id)
+
             } else {
                 console.error("Failed to create visitation");
             }
