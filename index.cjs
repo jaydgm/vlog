@@ -234,18 +234,22 @@ app.post('/schedule-visitation', async function(req, res) {
     const { host_id, visit_date, visit_time} = req.body;
     const visitor_id = req.user.user_id
 
-
-    await req.db.query(`
-    INSERT INTO Visitations (host_id, visitor_id, visit_date, visit_time)
-    VALUES (:host_id, :visitor_id, :visit_date, :visit_time);
-  `, {
+    // Inserting the new visitation record
+    const [result] = await req.db.query(`
+      INSERT INTO Visitations (host_id, visitor_id, visit_date, visit_time)
+      VALUES (:host_id, :visitor_id, :visit_date, :visit_time);
+    `, {
       host_id,
       visitor_id,
       visit_date,
       visit_time
     });
 
-    res.json({ success: true, message: 'Visitation created successfully' });
+    // Extracting the generated visitation_id from the result
+    const visitation_id = result.insertId;
+
+    // Sending back the visitation_id in the response
+    res.json({ success: true, visitation_id, message: 'Visitation created successfully' });
   } catch (err) {
     console.log(err);
     res.json({ success: false, message: 'Internal server error' });
