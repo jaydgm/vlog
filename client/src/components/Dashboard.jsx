@@ -87,32 +87,15 @@ function Dashboard() {
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                    <th scope="row">1</th>
-                    <td>Mark</td>
-                    <td>Otto</td>
-                    <td>@mdo</td>
-                    <td></td>
-                    </tr>
-                    <tr>
-                    <th scope="row">2</th>
-                    <td>Jacob</td>
-                    <td>Thornton</td>
-                    <td>@fat</td>
-                    <td></td>
-                    </tr>
-                    <tr>
-                    <th scope="row">3</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td></td>
-                    </tr>                    
-                    <tr>
-                    <th scope="row">4</th>
-                    <td colspan="2">Larry the Bird</td>
-                    <td>@twitter</td>
-                    <td></td>
-                    </tr>
+                    {visitations.map((visitations, index) => (
+                        <tr>
+                            <th scope="row">{index+1}</th>
+                            <td>{visitations.member}</td>
+                            <td>{visitations.attendees}</td>
+                            <td>{visitations.visit_date}</td>
+                            <td>{visitations.visit_time}</td>
+                        </tr>
+                    ))}
                 </tbody>
             </table>
         </>
