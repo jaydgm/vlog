@@ -1,6 +1,7 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrash } from '@fortawesome/free-solid-svg-icons';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
 import { useNavigate } from 'react-router';
@@ -25,6 +26,9 @@ function Dashboard() {
             'Content-Type': 'application/json',
             'authorization': jwt,
           },
+          body: JSON.stringify({
+            visitation_id: visitation_id,
+        })
         })
 
         const data = await response.json()
@@ -34,6 +38,30 @@ function Dashboard() {
             console.log('Error authenticating jwt')
         } else if (data.success) {
             navigate('/vlog/new')
+        }
+        
+        } catch (error) {
+            console.log(error)
+        }
+    }
+
+    const handleDelete = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/delete-visitation', {
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': jwt,
+          },
+        })
+
+        const { success } = await response.json()
+
+        if (success) {
+            console.log('Visitation deleted successfully')
+            console.log(visitations)
+        } else {
+            window.alert('error deleting visitation')
         }
         
         } catch (error) {
@@ -83,6 +111,7 @@ function Dashboard() {
                     <th scope="col">Attendees</th>
                     <th scope="col">Date</th>
                     <th scope="col">Time</th>
+                    <th scope='col'></th>
 
                     </tr>
                 </thead>
@@ -94,6 +123,11 @@ function Dashboard() {
                             <td>{visitations.attendees}</td>
                             <td>{visitations.visit_date}</td>
                             <td>{visitations.visit_time}</td>
+                            <td>
+                                <button className="delete-button" onClick={handleDelete}>
+                                    <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>
