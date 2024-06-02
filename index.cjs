@@ -320,4 +320,26 @@ app.get('/show-visitations', async function(req, res) {
     }
   })
 
+  app.delete('/delete-visitation', async function(req, res) {
+    try {
+
+      const { visitation_id } = req.body
+    
+      await req.db.beginTransaction();
+
+      // Delete attendees first
+      await req.db.query('DELETE FROM Attendees WHERE visit_id = :visitation_id', {visitation_id});
+
+      // Delete the visitation record
+      await req.db.query('DELETE FROM Visitations WHERE visitation_id = :visitation_id', {visitation_id});
+
+            // Commit the transaction
+      await req.db.commit();
+      res.json({ success: true, message: 'Visitation deleted successfully' });
+    } catch (err) {
+      console.log(err)
+      res.json({success: false, err: err})
+    }
+  })
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
