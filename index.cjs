@@ -262,6 +262,7 @@ app.get('/show-visitations', async function(req, res) {
 
   try {
     const [rows] = await req.db.query( `SELECT
+                                        Visitations.visitation_id,
                                         Visitations.visit_date,
                                         Visitations.visit_time,
                                         Members.member,
@@ -323,7 +324,7 @@ app.get('/show-visitations', async function(req, res) {
   app.delete('/delete-visitation', async function(req, res) {
     try {
 
-      const { visitation_id } = req.body
+      const { visitation_id } = req.query
     
       await req.db.beginTransaction();
 
