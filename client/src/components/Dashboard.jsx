@@ -94,7 +94,15 @@ function Dashboard() {
         } catch (error) {
             console.log(error)
         }
-    }   
+    }
+    
+    // Function to convert time from 24-hour format to 12-hour format
+    const convertTo12HourFormat = (timeString) => {
+        const [hour, minute] = timeString.split(':');
+        const suffix = hour >= 12 ? 'PM' : 'AM';
+        const adjustedHour = hour % 12 || 12;
+        return `${adjustedHour}:${minute} ${suffix}`;
+    };
 
     return (
         <>
@@ -127,7 +135,7 @@ function Dashboard() {
                             <td>{visitation.member}</td>
                             <td>{visitation.attendees}</td>
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
-                            <td>{visitation.visit_time}</td>
+                            <td>{convertTo12HourFormat(visitation.visit_time)}</td>
                             <td>
                                 <button className="delete-button" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
