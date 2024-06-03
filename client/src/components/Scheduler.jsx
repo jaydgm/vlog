@@ -135,11 +135,14 @@ function Scheduler() {
     };
 
     const handleSchedule = () => {
-        // Implement your schedule logic here
-        console.log(selectedMember);
-        console.log(selectedDate)
-        console.log(selectedTime)
-        console.log(attendees)
+        const visitationDateTime = new Date(selectedDate + ' ' + selectedTime);
+        const currentDateTime = new Date();
+    
+        if (visitationDateTime < currentDateTime) {
+            window.alert('Please choose another date and time.');
+            return;
+        }
+
         scheduleVisitation()
         // scheduleVisitation();
     };
