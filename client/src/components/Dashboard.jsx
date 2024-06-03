@@ -13,7 +13,7 @@ function Dashboard() {
 
     useEffect(() => {
         getVisitations()
-    , []})
+    }, [visitations])
 
     const navigate = useNavigate()
     const jwt = getJwt();
