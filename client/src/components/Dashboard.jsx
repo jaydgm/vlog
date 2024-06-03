@@ -67,6 +67,7 @@ function Dashboard() {
     }
 
     const getVisitations = async () => {
+        
         try {
             const response = await fetch('http://localhost:3000/show-visitations', {
           method: 'GET',
@@ -79,7 +80,13 @@ function Dashboard() {
         const { success, data } = await response.json()
 
         if (success) {
-            setVisitations(data)
+            // Filter visitations based on date
+            const filteredVisitations = data.filter(visitation => {
+                const visitationDate = new Date(visitation.visit_date);
+                const currentDate = new Date();
+                return visitationDate > currentDate;
+            });
+            setVisitations(filteredVisitations);
         } else {
             window.alert('error getting visitations')
         }
@@ -113,12 +120,13 @@ function Dashboard() {
                     </tr>
                 </thead>
                 <tbody>
+                    
                     {visitations.map((visitation, index) => (
                         <tr>
                             <th scope="row">{index+1}</th>
                             <td>{visitation.member}</td>
                             <td>{visitation.attendees}</td>
-                            <td>{visitation.visit_date}</td>
+                            <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{visitation.visit_time}</td>
                             <td>
                                 <button className="delete-button" onClick={() => handleDelete(visitation.visitation_id)}>
