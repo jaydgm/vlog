@@ -45,9 +45,9 @@ function Dashboard() {
         }
     }
 
-    const handleDelete = async () => {
+    const handleDelete = async (visitation_id) => {
         try {
-            const response = await fetch('http://localhost:3000/delete-visitation', {
+            const response = await fetch(`http://localhost:3000/delete-visitation?visitation_id=${visitation_id}`, {
           method: 'DELETE',
           headers: {
             'Content-Type': 'application/json',
@@ -116,15 +116,15 @@ function Dashboard() {
                     </tr>
                 </thead>
                 <tbody>
-                    {visitations.map((visitations, index) => (
+                    {visitations.map((visitation, index) => (
                         <tr>
                             <th scope="row">{index+1}</th>
-                            <td>{visitations.member}</td>
-                            <td>{visitations.attendees}</td>
-                            <td>{visitations.visit_date}</td>
-                            <td>{visitations.visit_time}</td>
+                            <td>{visitation.member}</td>
+                            <td>{visitation.attendees}</td>
+                            <td>{visitation.visit_date}</td>
+                            <td>{visitation.visit_time}</td>
                             <td>
-                                <button className="delete-button" onClick={handleDelete}>
+                                <button className="delete-button" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>
