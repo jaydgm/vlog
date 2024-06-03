@@ -112,7 +112,7 @@ function Dashboard() {
                     className="scheduleBtn rounded-pill" 
                     type="button"
                     onClick={handleScheduler}>
-                    Schedule Meeting</button>
+                    Schedule Visitation</button>
             </div>
             {/* table for scheduled meetings */}
             <table class="table table-success table-striped">
