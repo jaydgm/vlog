@@ -127,7 +127,7 @@ function Scheduler() {
         }
     }
     
-
+    // keeps users from adding same user more than once
     const handleAddAttendee = (user) => {
         if (!attendees.includes(user)) {
         setAttendees(prevAttendees => [...prevAttendees, user]);
@@ -137,14 +137,38 @@ function Scheduler() {
     const handleSchedule = () => {
         const visitationDateTime = new Date(selectedDate + ' ' + selectedTime);
         const currentDateTime = new Date();
-    
+
+        // Checks if at least 1 attendee is added
+        if (!attendees || attendees.length === 0) {
+            window.alert('Please select attendee(s)');
+            return;
+        }
+
+        // Checks if member is selected
+        if (!selectedMember) {
+            window.alert('Please select a member.');
+            return;
+        }
+
+        // Checks if time is selected
+        if (!selectedDate) {
+            window.alert('Please select a Date.');
+            return;
+        }
+
+        // Checks if time is selected
+        if (!selectedTime) {
+            window.alert('Please select a time.');
+            return;
+        }
+        
+        // keeps visitations from being scheduled if its past the current date
         if (visitationDateTime < currentDateTime) {
             window.alert('Please choose another date and time.');
             return;
         }
 
         scheduleVisitation()
-        // scheduleVisitation();
     };
 
 
