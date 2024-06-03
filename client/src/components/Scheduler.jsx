@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
 import { Form } from 'react-bootstrap';
+import { useNavigate } from 'react-router';
+
 
 function Scheduler() {
     const [members, setMembers] = useState([]);
@@ -21,6 +23,8 @@ function Scheduler() {
         fetchMembers();
         fetchUsers();
     }, []);
+
+    const navigate = useNavigate()
 
     const fetchMembers = async () => {
         try {
@@ -86,6 +90,7 @@ function Scheduler() {
             if (response.ok) {
                 const { visitation_id } = await response.json();
                 addAttendees(visitation_id)
+                navigate('../')
 
             } else {
                 console.error("Failed to create visitation");
