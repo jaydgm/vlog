@@ -26,9 +26,6 @@ function Dashboard() {
             'Content-Type': 'application/json',
             'authorization': jwt,
           },
-          body: JSON.stringify({
-            visitation_id: visitation_id,
-        })
         })
 
         const data = await response.json()
