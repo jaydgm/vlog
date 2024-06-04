@@ -1,13 +1,39 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
+html, .container {
+    background: #E8FFC3
+}
 
 .heroContainer {
     height: 200px;
 }
 
 .scheduleBtn {
-    background-color: red;
+    background: linear-gradient(45deg, #007bff, #0056b3);
+    border: none;
     color: white;
-    padding: 50px;
-    font-size: 30px;
+    font-weight: bold;
+    padding: 10px 20px;
+    transition: all 0.3s ease-in-out;
 }
+
+.scheduleBtn:hover {
+    background: linear-gradient(45deg, #0056b3, #003a80);
+    transform: scale(1.05);
+}
+
+.scheduleBtn:focus {
+    outline: none;
+    box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.5);
+}
+
+.modal {
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .modal-content {
+    margin: 50px;
+    max-width: 100%;
+  }
