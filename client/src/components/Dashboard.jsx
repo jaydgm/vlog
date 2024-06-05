@@ -14,7 +14,7 @@ function Dashboard() {
 
     useEffect(() => {
         getVisitations()
-    }, [visitations])
+    }, [])
 
     const navigate = useNavigate()
     const jwt = getJwt();
@@ -85,6 +85,10 @@ function Dashboard() {
         setSearchTerm(event.target.value);
     };
 
+    const filteredVisitations = visitations.filter(visitation => {
+        return visitation.member.toLowerCase().includes(searchTerm.toLowerCase());
+    });
+
     return (
         <>
             {/* Search bar */}
@@ -92,7 +96,7 @@ function Dashboard() {
                 <input 
                     type="text"
                     className="form-control"
-                    placeholder="Search by member or attendee"
+                    placeholder="Search by member"
                     value={searchTerm}
                     onChange={handleSearchChange}
                 />
@@ -112,7 +116,7 @@ function Dashboard() {
                 </thead>
                 <tbody>
                     
-                    {visitations.map((visitation, index) => (
+                    {filteredVisitations.map((visitation, index) => (
                         <tr>
                             <th scope="row">{index+1}</th>
                             <td>{visitation.member}</td>
