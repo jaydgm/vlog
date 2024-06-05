@@ -105,7 +105,7 @@ function Dashboard() {
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{convertTo12HourFormat(visitation.visit_time)}</td>
                             <td>
-                                <button className="delete-button" onClick={() => handleDelete(visitation.visitation_id)}>
+                            <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>
