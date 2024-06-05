@@ -1,6 +1,6 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
-html, .container {
+html {
     background: #E8FFC3;
 }
 
@@ -65,3 +65,35 @@ html, .container {
     font-size: 50px;
 }
 
+.profileContainer {
+    background-color: #E8FFC3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 70vh; /* Set a fixed height */
+}
+
+.profile-body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
+}
+
+.profile-text {
+    margin-bottom: auto; /* Pushes the button to the bottom */
+}
+
+.circle {
+    width: 100px; /* Adjust size as needed */
+    height: 100px; /* Adjust size as needed */
+    border-radius: 50%;
+    background-color: #8cb561; /* Or any color you prefer */
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 24px; /* Adjust font size as needed */
+}
+
+  
