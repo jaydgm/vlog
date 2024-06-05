@@ -10,7 +10,7 @@ import Layout from "./Layout";
 import Login from "./components/Login";
 import Signup from "./components/Signup";
 import Dashboard from "./components/Dashboard";
-import Scheduler from './components/Scheduler';
+import Profile from './components/Profile';
 
 
 
@@ -23,7 +23,7 @@ const Main = () => {
         <Route path="/vlog" element={<Layout />}>
           {/* Define nested routes relative to /vlog */}
           <Route index element={<Dashboard />} />
-          <Route path="new" element={<Scheduler />} />
+          <Route path="profile" element={<Profile />} />
         </Route>
       </Routes>
     </BrowserRouter>
