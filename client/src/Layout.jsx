@@ -50,7 +50,7 @@ function Layout() {
       {/* Navbar */}
       <nav className="navbar navbar-light bg-dark py-3 d-flex justify-content-between align-items-center">
         <Link to='/vlog' className="navbar-brand mb-0 h1 text-light fs-1">
-          <img src={Vlog} alt="Vlog" style={{ width: '100px', height: '100px' }} />
+          <img src={Vlog} alt="Vlog" style={{ width: '60px', height: '60px' }} />
         </Link>
         {/* Add Icon */}
         <button type='button' onClick={handleModal} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
@@ -62,7 +62,7 @@ function Layout() {
       {/* Footer */}
       <nav className="footer d-flex justify-content-center align-items-center fixed-bottom navbar-dark bg-dark">
         <Link to='/login' className="navbar-brand mb-0 h1 text-light fs-1">  
-        <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561"}} />
+        <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561", fontSize: '40px'}} />
         </Link>
       </nav>
 
