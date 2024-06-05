@@ -46,6 +46,7 @@ function Layout() {
   }
 
   return (
+    <>
     <div className="layout" style={{backgroundColor: '#343a40'}}>
       {/* Navbar */}
       <nav className="navbar navbar-light bg-dark py-3 d-flex justify-content-between align-items-center">
@@ -65,9 +66,10 @@ function Layout() {
         <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561", fontSize: '40px'}} />
         </Link>
       </nav>
-
-      <Outlet />
     </div>
+
+<Outlet />
+</>
   );
 }
 
