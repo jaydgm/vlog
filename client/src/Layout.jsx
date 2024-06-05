@@ -2,11 +2,11 @@ import React, { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Vlog from './images/vlog.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faArrowRightFromBracket, faUser } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import { getJwt } from "./auth/jwt";
 import SchedulerModal from './components/SchedulerModal'
-import Scheduler from './components/Scheduler';
+import Profile from './components/Profile';
 
 function Layout() {
   const [showModal, setShowModal] = useState(false)
@@ -61,9 +61,12 @@ function Layout() {
       </nav>
 
       {/* Footer */}
-      <nav className="footer d-flex justify-content-center align-items-center fixed-bottom navbar-dark bg-dark">
+      <nav className="footer d-flex justify-content-evenly align-items-center fixed-bottom navbar-dark bg-dark">
         <Link to='/login' className="navbar-brand mb-0 h1 text-light fs-1">  
-        <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561", fontSize: '40px'}} />
+          <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561", fontSize: '40px'}} />
+        </Link>
+        <Link to='/vlog/profile'>
+          <FontAwesomeIcon icon={faUser} style={{color: "#8cb561", fontSize: '40px'}} />  
         </Link>
       </nav>
     </div>
