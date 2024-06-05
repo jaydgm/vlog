@@ -50,23 +50,23 @@ function Layout() {
     <div className="layout" style={{backgroundColor: '#343a40'}}>
       {/* Navbar */}
       <nav className="navbar navbar-light bg-dark py-3 d-flex justify-content-between align-items-center">
-        <Link to='/vlog' className="navbar-brand mb-0 h1 text-light fs-1">
-          <img src={Vlog} alt="Vlog" style={{ width: '60px', height: '60px' }} />
+        <Link to='/vlog' className="icons mb-0 h1 text-light fs-1">
+          <img src={Vlog} alt="Vlog"/>
         </Link>
         {/* Add Icon */}
-        <button type='button' onClick={handleModal} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
-          <FontAwesomeIcon icon={faCirclePlus} size="lg" style={{ color: "#8CB561", fontSize: "50px" }} />
+        <button type='button' className="icons" onClick={handleModal} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
+          <FontAwesomeIcon className="fontAwesome" icon={faCirclePlus} size="lg" />
         </button>
         <SchedulerModal handleModal={handleModal} showModal={showModal} />
       </nav>
 
       {/* Footer */}
       <nav className="footer d-flex justify-content-evenly align-items-center fixed-bottom navbar-dark bg-dark">
-        <Link to='/login' className="navbar-brand mb-0 h1 text-light fs-1">  
-          <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561", fontSize: '40px'}} />
+        <Link to='/login' className="icons mb-0 h1 text-light fs-1">  
+          <FontAwesomeIcon className="fontAwesome"  icon={faArrowRightFromBracket} />
         </Link>
-        <Link to='/vlog/profile'>
-          <FontAwesomeIcon icon={faUser} style={{color: "#8cb561", fontSize: '40px'}} />  
+        <Link to='/vlog/profile' className="icons">
+          <FontAwesomeIcon className="fontAwesome"  icon={faUser} />  
         </Link>
       </nav>
     </div>
