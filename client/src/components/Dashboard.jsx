@@ -88,7 +88,7 @@ function Dashboard() {
     return (
         <>
             {/* Search bar */}
-            <div className="mb-3">
+            <div className="mb-3 mb-auto">
                 <input 
                     type="text"
                     className="form-control"
