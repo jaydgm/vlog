@@ -227,6 +227,24 @@ app.get('/users', async function(req, res) {
   }
 });
 
+// endpoint to get the logged-in user's data
+app.get('/user', async function(req, res) {
+  try {
+    const { user_id } = req.user;
+
+    const [data] = await req.db.query('SELECT * FROM Users WHERE user_id = ?', [user_id]);
+
+    // send fetched data to client
+    res.json({ success: true, data: data });
+    console.log(data)
+  } catch (err) {
+    // handle errors
+    console.error('error fetching user data:', err);
+    res.json({ success: false, message: 'internal server error' });
+  }
+});
+
+
 // endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
   try {
