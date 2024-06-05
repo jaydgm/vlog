@@ -10,7 +10,6 @@ import { useEffect, useState } from 'react';
 function Dashboard() {
 
     const [visitations, setVisitations] = useState([])
-    
 
     useEffect(() => {
         getVisitations()
@@ -44,34 +43,33 @@ function Dashboard() {
     }
 
     const getVisitations = async () => {
-        
         try {
-            const response = await fetch('http://localhost:3000/show-visitations', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            'authorization': jwt,
-          },
-        })
-
-        const { success, data } = await response.json()
-
-        if (success) {
+          const response = await fetch('http://localhost:3000/show-visitations', {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+              'authorization': jwt,
+            },
+          });
+      
+          const { success, data } = await response.json();
+      
+          if (success) {
             // Filter visitations based on date
             const filteredVisitations = data.filter(visitation => {
-                const visitationDate = new Date(visitation.visit_date);
-                const currentDate = new Date();
-                return visitationDate > currentDate;
+              const visitationDate = new Date(visitation.visit_date);
+              const currentDate = new Date();
+              return visitationDate > currentDate;
             });
             setVisitations(filteredVisitations);
-        } else {
-            window.alert('error getting visitations')
-        }
-        
+          } else {
+            window.alert('error getting visitations');
+          }
         } catch (error) {
-            console.log(error)
+          console.log(error);
         }
-    }
+      };
+      
     
     // Function to convert time from 24-hour format to 12-hour format
     const convertTo12HourFormat = (timeString) => {
@@ -106,7 +104,7 @@ function Dashboard() {
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{convertTo12HourFormat(visitation.visit_time)}</td>
                             <td>
-                            <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
+                                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>

@@ -116,6 +116,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
 
                 if (response.ok) {
                     const data = await response.json();
+                    console.log(attendees)
                 } else {
                     console.error("Failed to add attendee");
                 }
