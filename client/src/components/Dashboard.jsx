@@ -10,6 +10,7 @@ import { useEffect, useState } from 'react';
 function Dashboard() {
 
     const [visitations, setVisitations] = useState([])
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         getVisitations()
@@ -32,7 +33,7 @@ function Dashboard() {
 
         if (success) {
             console.log('Visitation deleted successfully')
-            console.log(visitations)
+            getVisitations()
         } else {
             window.alert('error deleting visitation')
         }
@@ -80,8 +81,22 @@ function Dashboard() {
         return `${adjustedHour}:${minute} ${suffix}`;
     };
 
+    const handleSearchChange = (event) => {
+        setSearchTerm(event.target.value);
+    };
+
     return (
         <>
+            {/* Search bar */}
+            <div className="mb-3">
+                <input 
+                    type="text"
+                    className="form-control"
+                    placeholder="Search by member or attendee"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
+            </div>
             {/* table for scheduled meetings */}
             <table className="table table-success table-striped">
                 <thead>
