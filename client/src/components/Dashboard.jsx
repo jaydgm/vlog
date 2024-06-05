@@ -1,77 +1,78 @@
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
 
 function Dashboard() {
 
-    const [visitations, setVisitations] = useState([]);
-    const [searchTerm, setSearchTerm] = useState('');
-
-    const navigate = useNavigate();
-    const jwt = getJwt();
+    const [visitations, setVisitations] = useState([])
+    
 
     useEffect(() => {
-        if (visitations.length > 0) {
-            getVisitations();
-        }
-    }, [visitations]); // Removed visitations from dependency array
+        getVisitations()
+    }, [visitations])
+
+    const navigate = useNavigate()
+    const jwt = getJwt();
 
     const handleDelete = async (visitation_id) => {
         try {
             const response = await fetch(`http://localhost:3000/delete-visitation?visitation_id=${visitation_id}`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': jwt,
-                },
-            });
+          method: 'DELETE',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': jwt,
+          },
+        })
 
-            const { success } = await response.json();
+        const { success } = await response.json()
 
-            if (success) {
-                console.log('Visitation deleted successfully');
-                getVisitations();
-            } else {
-                window.alert('error deleting visitation');
-            }
-
-        } catch (error) {
-            console.log(error);
+        if (success) {
+            console.log('Visitation deleted successfully')
+            console.log(visitations)
+        } else {
+            window.alert('error deleting visitation')
         }
-    };
+        
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
     const getVisitations = async () => {
+        
         try {
             const response = await fetch('http://localhost:3000/show-visitations', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'authorization': jwt,
-                },
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': jwt,
+          },
+        })
+
+        const { success, data } = await response.json()
+
+        if (success) {
+            // Filter visitations based on date
+            const filteredVisitations = data.filter(visitation => {
+                const visitationDate = new Date(visitation.visit_date);
+                const currentDate = new Date();
+                return visitationDate > currentDate;
             });
-
-            const { success, data } = await response.json();
-
-            if (success) {
-                // Filter visitations based on date
-                const filteredVisitations = data.filter(visitation => {
-                    const visitationDate = new Date(visitation.visit_date);
-                    const currentDate = new Date();
-                    return visitationDate > currentDate;
-                });
-                setVisitations(filteredVisitations);
-            } else {
-                window.alert('error getting visitations');
-            }
-
-        } catch (error) {
-            console.log(error);
+            setVisitations(filteredVisitations);
+        } else {
+            window.alert('error getting visitations')
         }
-    };
-
+        
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    
     // Function to convert time from 24-hour format to 12-hour format
     const convertTo12HourFormat = (timeString) => {
         const [hour, minute] = timeString.split(':');
@@ -80,50 +81,32 @@ function Dashboard() {
         return `${adjustedHour}:${minute} ${suffix}`;
     };
 
-    const handleSearchChange = (event) => {
-        setSearchTerm(event.target.value);
-    };
-
-    const filteredVisitations = visitations.filter(visitation => {
-        return visitation.member.toLowerCase().includes(searchTerm.toLowerCase());
-    });
-
     return (
         <>
-            {/* Search bar */}
-            <div className="mb-3 mb-auto">
-                <input 
-                    type="text"
-                    className="form-control"
-                    placeholder="Search by member"
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
-            </div>
             {/* table for scheduled meetings */}
             <table className="table table-success table-striped">
                 <thead>
                     <tr>
-                        <th scope="col">#</th>
-                        <th scope="col">Member</th>
-                        <th scope="col">Attendees</th>
-                        <th scope="col">Date</th>
-                        <th scope="col">Time</th>
-                        <th scope='col'></th>
+                    <th scope="col">#</th>
+                    <th scope="col">Member</th>
+                    <th scope="col">Attendees</th>
+                    <th scope="col">Date</th>
+                    <th scope="col">Time</th>
+                    <th scope='col'></th>
 
                     </tr>
                 </thead>
                 <tbody>
                     
                     {visitations.map((visitation, index) => (
-                        <tr key={visitation.visitation_id}>
+                        <tr>
                             <th scope="row">{index+1}</th>
                             <td>{visitation.member}</td>
                             <td>{visitation.attendees}</td>
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{convertTo12HourFormat(visitation.visit_time)}</td>
                             <td>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
+                            <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
                             </td>
@@ -132,7 +115,7 @@ function Dashboard() {
                 </tbody>
             </table>
         </>
-    );
+    )
 }
 
 export default Dashboard;
