@@ -1,7 +1,7 @@
 @import 'bootstrap/dist/css/bootstrap.min.css';
 
 html, .container {
-    background: #E8FFC3
+    background: #E8FFC3;
 }
 
 .heroContainer {
@@ -31,9 +31,37 @@ html, .container {
     display: flex !important;
     align-items: center;
     justify-content: center;
-  }
-  
-  .modal-content {
+}
+
+.modal-content {
     margin: 50px;
     max-width: 100%;
-  }
+}
+
+.navbar, .footer {
+    height: 90px;
+    overflow: hidden;
+    padding: 0;
+}
+
+.navbar .icons img,
+.navbar button {
+    max-height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.navbar .icons {
+    height: 100%;
+}
+
+.icons-img {
+    width: 80px; /* Adjust the width to make the image bigger */
+    height: auto; /* Ensure the aspect ratio is maintained */
+}
+
+.fontAwesome {
+    color: #8cb561;
+    font-size: 50px;
+}
+
