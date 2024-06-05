@@ -239,11 +239,10 @@ const SchedulerModal=({ handleModal, showModal }) => {
                         ))}
                     </ul>
                 </div>
-                
-            {/* schedule button */}
-            <button variant="primary" onClick={handleSchedule}>Schedule</button>
               </div>
               <div className="modal-footer">
+                            {/* schedule button */}
+            <button variant="primary" onClick={handleSchedule}>Schedule</button>
                 <button type="button" className="btn btn-secondary" onClick={handleModal}>Close</button>
                 {/* Add button to save item here */}
               </div>
