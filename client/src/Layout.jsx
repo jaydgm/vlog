@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Outlet, Link } from "react-router-dom";
 import Vlog from './images/vlog.png';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
+import { faCirclePlus, faArrowRightFromBracket } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import { getJwt } from "./auth/jwt";
 import SchedulerModal from './components/SchedulerModal'
@@ -61,7 +61,9 @@ function Layout() {
 
       {/* Footer */}
       <nav className="footer d-flex justify-content-center align-items-center fixed-bottom navbar-dark bg-dark">
-        <Link to='/login' className="navbar-brand mb-0 h1 text-light fs-1">Logout</Link>
+        <Link to='/login' className="navbar-brand mb-0 h1 text-light fs-1">  
+        <FontAwesomeIcon icon={faArrowRightFromBracket} style={{color: "#8cb561"}} />
+        </Link>
       </nav>
 
       <Outlet />
