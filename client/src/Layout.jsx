@@ -6,6 +6,7 @@ import { faCirclePlus } from '@fortawesome/free-solid-svg-icons';
 import { useNavigate } from 'react-router';
 import { getJwt } from "./auth/jwt";
 import SchedulerModal from './components/SchedulerModal'
+import Scheduler from './components/Scheduler';
 
 function Layout() {
   const [showModal, setShowModal] = useState(false)
@@ -55,6 +56,7 @@ function Layout() {
         <button type='button' onClick={handleModal} style={{ background: 'transparent', border: 'none', cursor: 'pointer' }}>
           <FontAwesomeIcon icon={faCirclePlus} size="lg" style={{ color: "#8CB561", fontSize: "50px" }} />
         </button>
+        <SchedulerModal handleModal={handleModal} showModal={showModal} />
       </nav>
 
       {/* Footer */}
