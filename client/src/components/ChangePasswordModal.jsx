@@ -11,28 +11,52 @@ const ChangePasswordModal = ({ handlePasswordModal, showPasswordModal}) => {
     const [oldPassword, setOldPassword] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
+    const jwt = getJwt();
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        // Add logic to handle password change
+    const handleChangePassword = async () => {
         if (newPassword === confirmNewPassword) {
-            console.log("Old Password:", oldPassword);
-            console.log("New Password:", newPassword);
-            // Call your password change API here
-            handlePasswordModal(); // Close modal after successful password change
+            try {
+                const response = await fetch('http://localhost:3000/change-password', {
+                    method: "PUT",
+                    headers: {
+                        "Content-Type": "application/json",
+                        'authorization': jwt,
+                    },
+                    body: JSON.stringify({
+                        oldPassword,
+                        newPassword
+                    })
+                });
+    
+                if (response.ok) {
+                    const data = await response.json();
+                    handlePasswordModal()
+                    resetForm()
+                } else {
+                    console.error("Failed to change password");
+                }
+                
+            } catch (error) {
+                console.error("Error changing password:", error);
+            }
         } else {
             alert("New passwords do not match");
         }
     };
 
+    const resetForm = () => {
+        setOldPassword('')
+        setNewPassword('')
+        setConfirmNewPassword('')
+    };
+
     return (
         <>
-              <Modal show={showPasswordModal} onHide={handlePasswordModal}>
-            <Modal.Header closeButton>
-                <Modal.Title>Change Password</Modal.Title>
-            </Modal.Header>
-            <Modal.Body>
-                <Form onSubmit={handleSubmit}>
+            <Modal show={showPasswordModal} onHide={handlePasswordModal}>
+                <Modal.Header closeButton>
+                    <Modal.Title>Change Password</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
                     <Form.Group className="mb-3" controlId="formOldPassword">
                         <Form.Label>Old Password</Form.Label>
                         <Form.Control
@@ -66,12 +90,14 @@ const ChangePasswordModal = ({ handlePasswordModal, showPasswordModal}) => {
                         />
                     </Form.Group>
 
-                    <Button variant="primary" type="submit">
+                    <Button 
+                        variant="primary" 
+                        type="submit"
+                        onClick={handleChangePassword}>
                         Change Password
                     </Button>
-                </Form>
-            </Modal.Body>
-        </Modal>
+                </Modal.Body>
+            </Modal>
         </>
     );
 }
