@@ -4,7 +4,7 @@ import '@popperjs/core';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
-import { Form, Button } from 'react-bootstrap';
+import { Form, Button, Modal } from 'react-bootstrap';
 import { useNavigate } from 'react-router';
 
 const SchedulerModal = ({ handleModal, showModal }) => {
@@ -180,86 +180,77 @@ const SchedulerModal = ({ handleModal, showModal }) => {
 
     return (
         <>
-            {/* Bootstrap Modal */}
-            {showModal && (
-                <div className="modal fade show" id="exampleModal" tabIndex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true" style={{ display: 'block' }}>
-                    <div className="modal-dialog modal-dialog-centered">
-                        <div className="modal-content">
-                            <div className="modal-header">
-                                <h5 className="modal-title" id="exampleModalLabel">Schedule a Visitation</h5>
-                                <button type="button" className="btn-close" onClick={handleModal} aria-label="Close"></button>
-                            </div>
-                            <div className="modal-body">
-                                {/* members dropdown */}
-                                <Form.Group controlId="formMember">
-                                    <Form.Label>Select a member:</Form.Label>
-                                    <div className="dropdown">
-                                        <button className="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {selectedMember.member ? selectedMember.member : "Choose a member"}
-                                        </button>
-                                        <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
-                                            {members.map(member => (
-                                                <li key={member.member_id}>
-                                                    <a className="dropdown-item" href="#" onClick={() => setSelectedMember(member)}>{member.member}</a>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </Form.Group>
-
-                                {/* date and time picker */}
-                                <Form.Group controlId="formDateTime" className="my-3">
-                                    <Form.Label>Select Date and Time: </Form.Label>
-                                    <div className="d-flex justify-content-between">
-                                        <Form.Control
-                                            type="date"
-                                            className="me-2"
-                                            value={selectedDate}
-                                            onChange={(e) => { setSelectedDate(e.target.value) }}
-                                        />
-                                        <Form.Control
-                                            type="time"
-                                            value={selectedTime}
-                                            onChange={(e) => { setSelectedTime(e.target.value) }}
-                                        />
-                                    </div>
-                                </Form.Group>
-
-                                {/* Attendees dropdown */}
-                                <Form.Group controlId="formAttendees">
-                                    <Form.Label>Select Attendee(s):</Form.Label>
-                                    <div className="dropdown">
-                                        <button className="btn btn-secondary dropdown-toggle w-100" type="button" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
-                                            {selectedAttendee ? selectedAttendee : "Choose an attendee"}
-                                        </button>
-                                        <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
-                                            {users.map(user => (
-                                                <li key={user.user_id}>
-                                                    <a className="dropdown-item" href="#" onClick={() => handleAddAttendee(user)}>{user.name}</a>
-                                                </li>
-                                            ))}
-                                        </ul>
-                                    </div>
-                                </Form.Group>
-
-                                <div className="mt-3">
-                                    <strong>Attendees:</strong>
-                                    <ul className="list-group">
-                                        {attendees.map(attendee => (
-                                            <li key={attendee.user_id} className="list-group-item list-group-item-action">{attendee.name}</li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            </div>
-                            <div className="modal-footer">
-                                {/* schedule button */}
-                                <Button variant="primary" onClick={handleSchedule}>Schedule</Button>
-                                <Button variant="secondary" onClick={() => {handleModal(); resetForm(); }}>Close</Button>
-                            </div>
-                        </div>
+           <Modal show={showModal} onHide={handleModal} centered>
+            <Modal.Header closeButton>
+                <Modal.Title>Schedule a Visitation</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+                {/* Members dropdown */}
+                <Form.Group controlId="formMember">
+                    <Form.Label>Select a member:</Form.Label>
+                    <div className="dropdown">
+                        <Button variant="secondary" className="dropdown-toggle w-100" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+                            {selectedMember.member ? selectedMember.member : "Choose a member"}
+                        </Button>
+                        <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton1">
+                            {members.map(member => (
+                                <li key={member.member_id}>
+                                    <a className="dropdown-item" href="#" onClick={() => setSelectedMember(member)}>{member.member}</a>
+                                </li>
+                            ))}
+                        </ul>
                     </div>
+                </Form.Group>
+
+                {/* Date and Time Picker */}
+                <Form.Group controlId="formDateTime" className="my-3">
+                    <Form.Label>Select Date and Time: </Form.Label>
+                    <div className="d-flex justify-content-between">
+                        <Form.Control
+                            type="date"
+                            className="me-2"
+                            value={selectedDate}
+                            onChange={(e) => setSelectedDate(e.target.value)}
+                        />
+                        <Form.Control
+                            type="time"
+                            value={selectedTime}
+                            onChange={(e) => setSelectedTime(e.target.value)}
+                        />
+                    </div>
+                </Form.Group>
+
+                {/* Attendees dropdown */}
+                <Form.Group controlId="formAttendees">
+                    <Form.Label>Select Attendee(s):</Form.Label>
+                    <div className="dropdown">
+                        <Button variant="secondary" className="dropdown-toggle w-100" id="dropdownMenuButton2" data-bs-toggle="dropdown" aria-expanded="false">
+                            {selectedAttendee ? selectedAttendee : "Choose an attendee"}
+                        </Button>
+                        <ul className="dropdown-menu w-100" aria-labelledby="dropdownMenuButton2">
+                            {users.map(user => (
+                                <li key={user.user_id}>
+                                    <a className="dropdown-item" href="#" onClick={() => handleAddAttendee(user)}>{user.name}</a>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
+                </Form.Group>
+
+                <div className="mt-3">
+                    <strong>Attendees:</strong>
+                    <ul className="list-group">
+                        {attendees.map(attendee => (
+                            <li key={attendee.user_id} className="list-group-item list-group-item-action">{attendee.name}</li>
+                        ))}
+                    </ul>
                 </div>
-            )}
+            </Modal.Body>
+            <Modal.Footer>
+                <Button variant="primary" onClick={handleSchedule}>Schedule</Button>
+                <Button variant="secondary" onClick={() => { handleModal(); resetForm(); }}>Close</Button>
+            </Modal.Footer>
+        </Modal>
         </>
     );
 }
