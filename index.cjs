@@ -350,13 +350,13 @@ app.get('/show-visitations', async function(req, res) {
   app.put('/change-password', async function(req, res) {
     try {
       const { email } = req.user
-      const { password } = req.body
+      const { newPassword } = req.body
 
-      if (!passowrd) {
+      if (!newPassword) {
         req,json({success: false, message: 'missing password'})
       }
 
-      const hashedPassword = await bcrypt(password, 10)
+      const hashedPassword = await bcrypt.hash(newPassword, 10)
 
       await req.db.query(`UPDATE Users SET password = :hashedPassword WHERE email = :email`, 
                         email, hashedPassword
