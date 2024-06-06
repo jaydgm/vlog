@@ -12,6 +12,7 @@ const ChangePasswordModal = ({ handlePasswordModal, showPasswordModal}) => {
     const [newPassword, setNewPassword] = useState('');
     const [confirmNewPassword, setConfirmNewPassword] = useState('');
     const jwt = getJwt();
+    const navigate = useNavigate()
 
     const handleChangePassword = async () => {
         if (newPassword === confirmNewPassword) {
@@ -23,15 +24,17 @@ const ChangePasswordModal = ({ handlePasswordModal, showPasswordModal}) => {
                         'authorization': jwt,
                     },
                     body: JSON.stringify({
-                        oldPassword,
                         newPassword
                     })
                 });
     
                 if (response.ok) {
                     const data = await response.json();
+                    console.log('hello')
                     handlePasswordModal()
                     resetForm()
+                    navigate('/login')
+
                 } else {
                     console.error("Failed to change password");
                 }
