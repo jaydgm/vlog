@@ -6,12 +6,10 @@ import { faCirclePlus, faArrowRightFromBracket, faUser } from '@fortawesome/free
 import { useNavigate } from 'react-router';
 import { getJwt } from "./auth/jwt";
 import SchedulerModal from './components/SchedulerModal'
-import ChangePasswordModal from './components/ChangePasswordModal';
 import Profile from './components/Profile';
 
 function Layout() {
   const [showModal, setShowModal] = useState(false)
-  const [showPasswordModal, setShowPasswordModal] = useState(false)
 
   const navigate = useNavigate();
   const jwt = getJwt();
@@ -45,11 +43,6 @@ function Layout() {
   const handleModal = () => {
     setShowModal(prevShowModal => !showModal)
     console.log(showModal)
-  }
-
-  const handlePasswordModal = () => {
-    setShowPasswordModal(prevShoPasswordModal => !showPasswordModal)
-    console.log(showPasswordModal)
   }
 
   return (
