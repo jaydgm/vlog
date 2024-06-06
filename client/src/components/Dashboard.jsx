@@ -81,6 +81,7 @@ function Dashboard() {
 
     return (
         <>
+            <h2 className="title-header text-center my-4">Scheduled Visitations</h2>
             {/* table for scheduled meetings */}
             <table className="table table-success table-striped">
                 <thead>
