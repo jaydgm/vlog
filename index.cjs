@@ -347,4 +347,26 @@ app.get('/show-visitations', async function(req, res) {
     }
   })
 
+  app.update('/change-password', async function(req, res) {
+    try {
+      const { email } = req.user
+      const { password } = req.body
+
+      if (!passowrd) {
+        req,json({success: false, message: 'missing password'})
+      }
+
+      const hashedPassword = await bcrypt(password, 10)
+
+      await req.db.query(`UPDATE Users SET password = :hashedPassword WHERE email = :email`, 
+                        email, hashedPassword
+                        )
+                      
+      res.json({success: true, message: 'Successfully chnaged password'})
+
+    } catch (err) {
+      res.json({success: false, err: err})
+    }
+  })
+
 app.listen(port, () => console.log(`listening on http://localhost:${port}`));
