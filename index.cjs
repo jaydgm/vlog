@@ -347,7 +347,7 @@ app.get('/show-visitations', async function(req, res) {
     }
   })
 
-  app.update('/change-password', async function(req, res) {
+  app.put('/change-password', async function(req, res) {
     try {
       const { email } = req.user
       const { password } = req.body
