@@ -1,7 +1,7 @@
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTrash } from '@fortawesome/free-solid-svg-icons';
+import { faTrash, faEllipsisV } from '@fortawesome/free-solid-svg-icons';
 import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-icons';
 import { getJwt } from "../auth/jwt";
 import { useNavigate } from 'react-router';
@@ -104,9 +104,12 @@ function Dashboard() {
                             <td>{visitation.attendees}</td>
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{convertTo12HourFormat(visitation.visit_time)}</td>
-                            <td>
-                                <button className="btn btn-danger btn-sm" onClick={() => handleDelete(visitation.visitation_id)}>
+                            <td className="actions-cell">
+                                <button className="btn btn-danger btn-sm me-2" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
+                                </button>
+                                <button className="btn btn-icon" onClick={() => console.log('Ellipsis clicked')}>
+                                    <FontAwesomeIcon icon={faEllipsisV} />
                                 </button>
                             </td>
                         </tr>
