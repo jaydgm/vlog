@@ -96,15 +96,14 @@ function Dashboard() {
                     </tr>
                 </thead>
                 <tbody>
-                    
                     {visitations.map((visitation, index) => (
-                        <tr>
+                        <tr className='table-row'>
                             <th scope="row">{index+1}</th>
                             <td>{visitation.member}</td>
                             <td>{visitation.attendees}</td>
                             <td>{new Date(visitation.visit_date).toLocaleDateString('en-US')}</td>
                             <td>{convertTo12HourFormat(visitation.visit_time)}</td>
-                            <td className="actions-cell">
+                            <td className="table-actions">
                                 <button className="btn btn-danger btn-sm me-2" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
