@@ -11,10 +11,6 @@ const EditVisitationModal = ({ show, handleClose, visitation }) => {
         {/* Your form or content for editing the visitation */}
         <form>
           <div className="mb-3">
-            <label htmlFor="member" className="form-label">Member</label>
-            <input type="text" className="form-control" id="member" defaultValue={visitation.member} />
-          </div>
-          <div className="mb-3">
             <label htmlFor="attendees" className="form-label">Attendees</label>
             <input type="text" className="form-control" id="attendees" defaultValue={visitation.attendees} />
           </div>
