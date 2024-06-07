@@ -6,10 +6,13 @@ import { faUser, faEnvelope, faLock, faKey } from '@fortawesome/free-solid-svg-i
 import { getJwt } from "../auth/jwt";
 import { useNavigate } from 'react-router';
 import { useEffect, useState } from 'react';
+import EditVisitationModal from './EditVisitationModal'
 
 function Dashboard() {
 
     const [visitations, setVisitations] = useState([])
+    const [showEditModal, setShowEditModal] = useState(false)
+    const [selectedVisitation, setSelectedVisitation] = useState(null)
 
     useEffect(() => {
         getVisitations()
@@ -70,6 +73,15 @@ function Dashboard() {
         }
       };
       
+    const handleEditModal = (visitation) => {
+      setSelectedVisitation(visitation)
+      setShowEditModal(true)
+    }
+
+    const closeModal = () => {
+      setShowEditModal(false)
+      setSelectedVisitation(null)
+    }
     
     // Function to convert time from 24-hour format to 12-hour format
     const convertTo12HourFormat = (timeString) => {
@@ -107,9 +119,16 @@ function Dashboard() {
                                 <button className="btn btn-danger btn-sm me-2" onClick={() => handleDelete(visitation.visitation_id)}>
                                     <FontAwesomeIcon icon={faTrash} />
                                 </button>
-                                <button className="btn btn-icon" onClick={() => console.log('Ellipsis clicked')}>
+                                <button className="btn btn-icon" onClick={() => handleEditModal(visitation)}>
                                     <FontAwesomeIcon icon={faEllipsisV} />
                                 </button>
+                                {showEditModal && selectedVisitation && (
+                                  <EditVisitationModal
+                                      show={showEditModal}
+                                      handleClose={closeModal}
+                                      visitation={selectedVisitation}
+                                  />
+                                )}
                             </td>
                         </tr>
                     ))}
