@@ -69,8 +69,8 @@ function Dashboard() {
 
                 // Create Date object
                 const visitationDateTime = new Date(visitationDateTimeString);
-                // console.log(visitationDateTime)
-                // console.log(currentDate)
+                console.log(visitationDateTime)
+                console.log(currentDate)
 
                 return visitationDateTime > currentDate;
             });
