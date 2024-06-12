@@ -16,7 +16,7 @@ function Dashboard() {
 
     useEffect(() => {
         getVisitations()
-    }, [visitations])
+    }, [])
 
     const navigate = useNavigate()
     const jwt = getJwt();
@@ -35,7 +35,7 @@ function Dashboard() {
 
         if (success) {
             console.log('Visitation deleted successfully')
-            console.log(visitations)
+            getVisitations()
         } else {
             window.alert('error deleting visitation')
         }
@@ -58,11 +58,21 @@ function Dashboard() {
           const { success, data } = await response.json();
       
           if (success) {
-            // Filter visitations based on date
+            const currentDate = new Date();
+            // Filter visitations based on date and time
             const filteredVisitations = data.filter(visitation => {
-              const visitationDate = new Date(visitation.visit_date);
-              const currentDate = new Date();
-              return visitationDate > currentDate;
+                // Extract date part from visit_date
+                const visitDatePart = visitation.visit_date.split('T')[0];
+
+                // Combine date part with visit_time
+                const visitationDateTimeString = `${visitDatePart}T${visitation.visit_time}.000Z`;
+
+                // Create Date object
+                const visitationDateTime = new Date(visitationDateTimeString);
+                // console.log(visitationDateTime)
+                // console.log(currentDate)
+
+                return visitationDateTime > currentDate;
             });
             setVisitations(filteredVisitations);
           } else {

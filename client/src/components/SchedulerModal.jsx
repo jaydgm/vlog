@@ -136,6 +136,8 @@ const SchedulerModal = ({ handleModal, showModal }) => {
     const handleSchedule = () => {
         const visitationDateTime = new Date(selectedDate + ' ' + selectedTime);
         const currentDateTime = new Date();
+        console.log(visitationDateTime)
+        console.log(currentDateTime)
 
         // Checks if at least 1 attendee is added
         if (!attendees || attendees.length === 0) {
