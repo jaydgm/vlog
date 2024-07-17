@@ -58,21 +58,29 @@ function Dashboard() {
           const { success, data } = await response.json();
       
           if (success) {
-            const currentDate = new Date();
-            // Filter visitations based on date and time
-            const filteredVisitations = data.filter(visitation => {
-                // Extract date part from visit_date
-                const visitDatePart = visitation.visit_date.split('T')[0];
+            const currentUtcDate = new Date(); // Keep the current time
 
-                // Combine date part with visit_time
-                const visitationDateTimeString = `${visitDatePart}T${visitation.visit_time}.000Z`;
-
-                // Create Date object
-                const visitationDateTime = new Date(visitationDateTimeString);
-                console.log(visitationDateTime)
-                console.log(currentDate)
-
-                return visitationDateTime > currentDate;
+              // Subtract 7 hours from the current UTC time
+              currentUtcDate.setUTCHours(currentUtcDate.getUTCHours() - 7);
+              
+              const filteredVisitations = data.filter(visitation => {
+                  const visitDatePart = visitation.visit_date.split('T')[0];
+                  const visitTimePart = visitation.visit_time.split(':');
+              
+                  // Create a Date object in UTC for visitation
+                  const visitationDateTime = new Date(Date.UTC(
+                      parseInt(visitDatePart.split('-')[0]), // year
+                      parseInt(visitDatePart.split('-')[1]) - 1, // month (0-based index)
+                      parseInt(visitDatePart.split('-')[2]), // day
+                      parseInt(visitTimePart[0]), // hours
+                      parseInt(visitTimePart[1]), // minutes
+                      0 // seconds
+                  ));
+              
+                  console.log('Visitation DateTime (UTC):', visitationDateTime.toISOString());
+                  console.log('Adjusted Current DateTime (UTC):', currentUtcDate.toISOString());
+              
+                  return visitationDateTime > currentUtcDate;
             });
             setVisitations(filteredVisitations);
           } else {
