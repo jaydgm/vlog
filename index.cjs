@@ -292,6 +292,18 @@ app.post('/schedule-visitation', async function(req, res) {
   }
 });
 
+app.get('/show-activities', async function(req, res) {
+  try {
+    const [rows] = await req.db.query(`
+      SELECT * FROM Activities;
+    `)
+
+    res.json({success: true, data: rows})
+  } catch (err) {
+    res.json({success: false, message: err})
+  }
+});
+
 app.get('/show-visitations', async function(req, res) {
   try {
     const [rows] = await req.db.query( `
