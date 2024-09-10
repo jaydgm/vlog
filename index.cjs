@@ -292,6 +292,19 @@ app.post('/schedule-visitation', async function(req, res) {
   }
 });
 
+app.post('/add-activity', async function (req, res) {
+  try {
+    await req.db.query(`
+      INSERT INTO Activities (activity_name, activity_date, activity_venue)
+      VALUES (?, ?, ?)
+    `,
+    [req.body.activity_name, req.body.activity_date, req.body.activity_venue])
+    res.json({success: true, message: 'Activity created successfully'})
+  } catch (err) {
+    res.json({success: false, message: err})
+  }
+})
+
 app.get('/show-activities', async function(req, res) {
   try {
     const [rows] = await req.db.query(`
