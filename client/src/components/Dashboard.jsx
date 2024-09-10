@@ -10,6 +10,7 @@ import EditVisitationModal from './EditVisitationModal'
 
 function Dashboard() {
 
+    const [activities, setActivities] = useState([]);
     const [visitations, setVisitations] = useState([])
     const [showEditModal, setShowEditModal] = useState(false)
     const [selectedVisitation, setSelectedVisitation] = useState(null)
@@ -43,6 +44,28 @@ function Dashboard() {
         } catch (error) {
             console.log(error)
         }
+    }
+
+    const getActivities = async () => {
+      try {
+        const response = await fetch('http://localhost:3000/show-activities', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'authorization': jwt,
+          },
+        });
+
+        const {success, data} = await response.json();
+
+        if (success) {
+          setActivities(data)
+        } else {
+          window.alert('error getting activites')
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
 
     const getVisitations = async () => {
