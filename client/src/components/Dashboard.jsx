@@ -16,7 +16,8 @@ function Dashboard() {
     const [selectedVisitation, setSelectedVisitation] = useState(null)
 
     useEffect(() => {
-        getVisitations()
+        getActivities();
+        getVisitations();
     }, [])
 
     const navigate = useNavigate()
@@ -59,7 +60,7 @@ function Dashboard() {
         const {success, data} = await response.json();
 
         if (success) {
-          setActivities(data)
+          setActivities(data[0])
         } else {
           window.alert('error getting activites')
         }
@@ -134,6 +135,29 @@ function Dashboard() {
 
     return (
         <>
+          <h2 className="title-header text-center my-4">Upcoming Activities</h2>
+          {/* table for activities */}
+          <table className="table table-info table-striped">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">Activity Name</th>
+                <th scope="col">Date</th>
+                <th scope="col">Venue</th>
+              </tr>
+            </thead>
+            <tbody>
+              {activities.map((activity, index) => (
+                <tr key={index}>
+                  <th scope="row">{index + 1}</th>
+                  <td>{activity.activity_name}</td>
+                  <td>{new Date(activity.activity_date).toLocaleDateString('en-US')}</td>
+                  <td>{activity.activity_venue}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+
             <h2 className="title-header text-center my-4">Scheduled Visitations</h2>
             {/* table for scheduled meetings */}
             <table className="table table-success table-striped">
