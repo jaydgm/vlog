@@ -244,6 +244,24 @@ app.get('/user', async function(req, res) {
   }
 });
 
+  // endpoint to add an attendee 
+  app.post('/add-attendees', async function(req, res) {
+    try {
+      const { visit_id, attendee_id } = req.body;
+
+
+      await req.db.query(`
+                          INSERT INTO Attendees (visit_id, attendee_id)
+                          VALUES (:visit_id, :attendee_id)`, {
+                            visit_id, attendee_id
+                          })
+
+      res.json({ success: true, message: 'Attendee added successfully' });
+    } catch (err) {
+      console.log(err)
+      res.json({ success: false, err: err});
+    }
+  })
 
 // endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
@@ -305,25 +323,19 @@ app.get('/show-visitations', async function(req, res) {
   }
 });
 
+app.put('/update-visitation', async function(req,res) {
+  try {
+    const { visitation_id, attendees, visit_date, visit_time } = req.body
 
-  // endpoint to add an attendee 
-  app.post('/add-attendees', async function(req, res) {
-    try {
-      const { visit_id, attendee_id } = req.body;
+    await req.db.query(`
+                      UPDATE Visitations 
+                      SET attendees = ?, visit_date = ?, visit_time = ?
+                      `)
 
-
-      await req.db.query(`
-                          INSERT INTO Attendees (visit_id, attendee_id)
-                          VALUES (:visit_id, :attendee_id)`, {
-                            visit_id, attendee_id
-                          })
-
-      res.json({ success: true, message: 'Attendee added successfully' });
-    } catch (err) {
-      console.log(err)
-      res.json({ success: false, err: err});
-    }
-  })
+  } catch {
+    
+  }
+})
 
   app.delete('/delete-visitation', async function(req, res) {
     try {
