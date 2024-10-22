@@ -125,7 +125,7 @@ function Signup() {
                         </div>
                         <div className="d-flex justify-content-center mb-5">
                           <label className="form-check-label" htmlFor="form2Example3">
-                            Already have an account? <Link to="/login">Log in</Link>
+                            Already have an account? <Link to="/">Log in</Link>
                           </label>
                         </div>
                       </form>

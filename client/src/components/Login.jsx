@@ -92,7 +92,7 @@ function Login() {
                             </div>
                             <div className="d-flex justify-content-center mb-5">
                                 <label className="form-check-label" htmlFor="form2Example3">
-                                Don't have an account? <Link to="/">Sign up</Link>
+                                Don't have an account? <Link to="/signup">Sign up</Link>
                           </label>
                         </div>
                         </form>

@@ -18,8 +18,8 @@ const Main = () => {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Signup />} />
-        <Route path="/login" element={<Login />} />
+      <Route path="/" element={<Login />} />
+        <Route path="/signup" element={<Signup />} />
         <Route path="/vlog" element={<Layout />}>
           {/* Define nested routes relative to /vlog */}
           <Route index element={<Dashboard />} />

@@ -62,7 +62,7 @@ function Layout() {
 
       {/* Footer */}
       <nav className="footer d-flex justify-content-evenly align-items-center fixed-bottom navbar-dark bg-dark">
-        <Link to='/login' className="icons mb-0 h1 text-light fs-1">  
+        <Link to='/' className="icons mb-0 h1 text-light fs-1">  
           <FontAwesomeIcon className="fontAwesome"  icon={faArrowRightFromBracket} />
         </Link>
         <Link to='/vlog/profile' className="icons">
