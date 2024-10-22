@@ -60,7 +60,12 @@ function Dashboard() {
         const {success, data} = await response.json();
 
         if (success) {
-          setActivities(data[0])
+          if (Array.isArray(data)) {
+            setActivities(data)
+          } else {
+            console.error("Expected array of activities but got:", data)
+            setActivities([]);
+          }
         } else {
           window.alert('error getting activites')
         }
