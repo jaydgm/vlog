@@ -382,6 +382,23 @@ app.put('/update-visitation', async function(req,res) {
       console.log(err)
       res.json({success: false, err: err})
     }
+  });
+
+  app.post('/archive', async function(req, res) {
+    try {
+      await req.db.query(
+        `INSERT INTO Archive (visitation_id, host_id, visitor_id, visit_date, visit_time)
+        SELECT visitation_id, host_id, visitor_id, visit_date, visit_time
+        FROM Visitations
+        WHERE visitation_id = :visitation_id
+        `
+      )
+
+      res.json({success: true, message: 'Archive created successfully'});
+    } catch (err) {
+      console.log(err)
+      res.json({success: false, err: err})
+    }
   })
 
   app.put('/change-password', async function(req, res) {
