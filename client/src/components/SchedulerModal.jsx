@@ -84,7 +84,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
                 })
             });
 
-            // is response is successful, extract the visitatio_id to use in addAttendees
+            // is response is successful, extract the visitation_id to use in addAttendees
             if (response.ok) {
                 const { visitation_id } = await response.json();
                 await addAttendees(visitation_id);
@@ -98,6 +98,30 @@ const SchedulerModal = ({ handleModal, showModal }) => {
             console.error("Error fetching members:", error);
         }
     };
+
+    const addArchive = async () => {
+        try {
+            const response = await fetch('http://localhost:3000/archive', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': jwt,
+                },
+                body: JSON.stringify({
+                    visitation_id: visitation_id,
+                    host_id: selectedMember.member_id,
+                    visit_date: selectedDate,
+                    visit_time: selectedTime,
+                })
+            });
+            if (response.ok) {
+                console.log("Archive added successfully");
+            }
+
+        } catch (error) {
+            console.log("Error adding to archive", error);
+        }
+    }
 
     const addAttendees = async (visitation_id) => {
         try {
@@ -170,6 +194,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
         }
 
         scheduleVisitation();
+        addArchive();
     };
 
     const resetForm = () => {

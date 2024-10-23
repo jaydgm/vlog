@@ -386,13 +386,17 @@ app.put('/update-visitation', async function(req,res) {
 
   app.post('/archive', async function(req, res) {
     try {
+
+      const {visitation_id} = req.body;
+
       await req.db.query(
         `INSERT INTO Archive (visitation_id, host_id, visitor_id, visit_date, visit_time)
         SELECT visitation_id, host_id, visitor_id, visit_date, visit_time
         FROM Visitations
         WHERE visitation_id = :visitation_id
-        `
-      )
+        `, {
+          visitation_id
+        });
 
       res.json({success: true, message: 'Archive created successfully'});
     } catch (err) {
