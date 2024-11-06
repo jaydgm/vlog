@@ -88,6 +88,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
             if (response.ok) {
                 const { visitation_id } = await response.json();
                 await addAttendees(visitation_id);
+                await addArchive(visitation_id);
                 resetForm();
                 handleModal();
             } else {
@@ -99,7 +100,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
         }
     };
 
-    const addArchive = async () => {
+    const addArchive = async (visitation_id) => {
         try {
             const response = await fetch('http://localhost:3000/archive', {
                 method: "POST",
@@ -116,6 +117,7 @@ const SchedulerModal = ({ handleModal, showModal }) => {
             });
             if (response.ok) {
                 console.log("Archive added successfully");
+                console.log("test")
             }
 
         } catch (error) {
@@ -194,7 +196,6 @@ const SchedulerModal = ({ handleModal, showModal }) => {
         }
 
         scheduleVisitation();
-        addArchive();
     };
 
     const resetForm = () => {

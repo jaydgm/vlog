@@ -386,7 +386,6 @@ app.put('/update-visitation', async function(req,res) {
 
   app.post('/archive', async function(req, res) {
     try {
-
       const {visitation_id} = req.body;
 
       await req.db.query(
