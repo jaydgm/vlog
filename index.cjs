@@ -372,6 +372,9 @@ app.put('/update-visitation', async function(req,res) {
       // Delete attendees first
       await req.db.query('DELETE FROM Attendees WHERE visit_id = :visitation_id', {visitation_id});
 
+      // delete the archive record
+      await req.db.query('DELETE FROM Archive WHERE visitation_id = :visitation_id', {visitation_id})
+
       // Delete the visitation record
       await req.db.query('DELETE FROM Visitations WHERE visitation_id = :visitation_id', {visitation_id});
 
