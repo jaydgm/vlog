@@ -1,13 +1,22 @@
 import React, { useState } from 'react';
 import { Form, Badge, InputGroup, Modal, Button } from 'react-bootstrap';
 
-const EditVisitationModal = ({ show, handleClose, visitation }) => {
+const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
   
   // split attendees by comma
   const [attendees, setAttendees] = useState(visitation.attendees ? visitation.attendees.split(',') : []);
+  const [officers, setOfficers] = useState(users ? users.split(",") : []);
   const [visitDate, setVisitDate] = useState(new Date(visitation.visit_date).toISOString().substr(0, 10));
   const [visitTime, setVisitTime] = useState(visitation.visit_time);
   const [search, setSearch] = useState("");
+
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/users')
+    } catch (error) {
+      console.log("failed to fetch users: ", error);
+    }
+  }
 
 
   const handleAddAttendee = () => {
@@ -23,6 +32,8 @@ const EditVisitationModal = ({ show, handleClose, visitation }) => {
   const handleRemoveAttendee = (removedName) => {
     setAttendees(attendees.filter(attendee => attendee !== removedName));
   }
+
+  console.log(officers);
 
 
   return (
