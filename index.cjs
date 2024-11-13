@@ -348,7 +348,7 @@ app.get('/show-visitations', async function(req, res) {
   }
 });
 
-app.put('/update-visitation', async function(req,res) {
+app.put('/update-visitation', async function(req, res) {
   try {
     const { visitation_id, attendees, visit_date, visit_time } = req.body
 
@@ -357,9 +357,10 @@ app.put('/update-visitation', async function(req,res) {
                       SET attendees = ?, visit_date = ?, visit_time = ?
                       `)
 
-  } catch {
-    
-  }
+  } catch (err) {
+    console.log(err)
+    req.json({success: false, err: err})
+  } 
 })
 
   app.delete('/delete-visitation', async function(req, res) {
