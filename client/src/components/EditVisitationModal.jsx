@@ -6,7 +6,7 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
   // split attendees by comma
   const [attendees, setAttendees] = useState(visitation.attendees ? visitation.attendees.split(',') : []);
   const [officers, setOfficers] = useState(users ? users.split(",") : []);
-  const [visitDate, setVisitDate] = useState(new Date(visitation.visit_date).toISOString().substr(0, 10));
+  const [visitDate, setVisitDate] = useState(new Date(visitation.visit_date).toISOString().slice(0, 10));
   const [visitTime, setVisitTime] = useState(visitation.visit_time);
   const [search, setSearch] = useState("");
 
@@ -33,7 +33,10 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
     setAttendees(attendees.filter(attendee => attendee !== removedName));
   }
 
-  console.log(officers);
+  const test = () => {
+    console.log(visitDate)
+    console.log(visitTime)
+  }
 
 
   return (
@@ -76,11 +79,23 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
     </div>
           <div className="mb-3">
             <label htmlFor="visit_date" className="form-label">Date</label>
-            <input type="date" className="form-control" id="visit_date" defaultValue={new Date(visitation.visit_date).toISOString().substr(0, 10)} />
+            <input 
+              type="date" 
+              className="form-control" 
+              id="visit_date" 
+              defaultValue={new Date(visitation.visit_date).toISOString().slice(0, 10)} 
+              onChange={(e) => setVisitDate(e.target.value)}
+            />
           </div>
           <div className="mb-3">
             <label htmlFor="visit_time" className="form-label">Time</label>
-            <input type="time" className="form-control" id="visit_time" defaultValue={visitation.visit_time} />
+            <input 
+              type="time" 
+              className="form-control" 
+              id="visit_time" 
+              defaultValue={visitation.visit_time} 
+              onChange={(e) => {setVisitTime(e.target.value)}}
+            />
           </div>
         </form>
       </Modal.Body>
@@ -88,7 +103,9 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
         <Button variant="secondary" onClick={handleClose}>
           Close
         </Button>
-        <Button variant="primary">
+        <Button variant="primary"
+          onClick={test()}
+        >
           Save Changes
         </Button>
       </Modal.Footer>
