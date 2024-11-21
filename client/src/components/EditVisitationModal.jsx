@@ -17,6 +17,33 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
       console.log("failed to fetch users: ", error);
     }
   }
+  const updateVisitation = async () => {
+    try {
+      const response = await fetch('http://localhost:3000/update-visitation', {
+        method: "PUT",
+        headers: {
+            "Content-Type": "application/json",
+            'authorization': jwt,
+        },
+        body: JSON.stringify({
+            visitation_id: visitation.visitation_id,
+            visit_date: visitDate,
+            visit_time: visitTime,
+        })
+      });
+      const { success, data } = await response.json()
+
+      if (success) {
+          console.log('Visitation updated successfully')
+          console.log(data)
+      } else {
+          window.alert('error updating visitation')
+      }
+
+    } catch (error) {
+      console.log("failed to update visitation: ", error);
+    }
+  }
 
 
   const handleAddAttendee = () => {
@@ -47,36 +74,36 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
       <Modal.Body>
         {/* Your form or content for editing the visitation */}
         <form>
-        <div className="mb-3">
-      <Form.Label>Attendees</Form.Label>
-      <InputGroup className="mb-2">
-        <Form.Control
-          type="text"
-          placeholder="Add attendee..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-        <Button variant="outline-secondary" onClick={handleAddAttendee}>
-          Add
-        </Button>
-      </InputGroup>
+          <div className="mb-3">
+            <Form.Label>Attendees</Form.Label>
+            <InputGroup className="mb-2">
+              <Form.Control
+                type="text"
+                placeholder="Add attendee..."
+                value={search}
+                onChange={(e) => setSearch(e.target.value)}
+              />
+              <Button variant="outline-secondary" onClick={handleAddAttendee}>
+                Add
+              </Button>
+            </InputGroup>
 
-      {/* map over attendees and display them as badges */}
-      <div>
-        {attendees.map((name, index) => (
-          <Badge
-            key={index}
-            pill
-            bg="primary"
-            className="me-2"
-            style={{ cursor: 'pointer' }}
-            onClick={() => handleRemoveAttendee(name)}
-          >
-            {name} ✕
-          </Badge>
-        ))}
-      </div>
-    </div>
+            {/* map over attendees and display them as badges */}
+            <div>
+              {attendees.map((name, index) => (
+                <Badge
+                  key={index}
+                  pill
+                  bg="primary"
+                  className="me-2"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => handleRemoveAttendee(name)}
+                >
+                  {name} ✕
+                </Badge>
+              ))}
+            </div>
+          </div>
           <div className="mb-3">
             <label htmlFor="visit_date" className="form-label">Date</label>
             <input 
