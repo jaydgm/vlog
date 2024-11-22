@@ -368,16 +368,20 @@ app.get('/show-visitations', async function(req, res) {
 
 app.put('/update-visitation', async function(req, res) {
   try {
-    const { visitation_id, attendees, visit_date, visit_time } = req.body
+    const { visitation_id, visit_date, visit_time } = req.body
+    const visitor_id = req.user.user_id
+
 
     await req.db.query(`
                       UPDATE Visitations 
-                      SET attendees = ?, visit_date = ?, visit_time = ?
-                      `)
-
+                      SET visitor_id = ?, visit_date = ?, visit_time = ?
+                      WHERE visitation_id = :visitation_id
+                      `,
+                      {visitation_id, visitor_id, visit_date, visit_time})
+    res.json({success: true})
   } catch (err) {
     console.log(err)
-    req.json({success: false, err: err})
+    res.json({success: false, err: err})
   } 
 })
 
