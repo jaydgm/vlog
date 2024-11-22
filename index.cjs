@@ -263,6 +263,24 @@ app.get('/user', async function(req, res) {
     }
   })
 
+  // endpoint to update the attendees when a visitation is updated
+  app.post('/update-attendees', async function(req, res) {
+    try {
+      const { visit_id, attendee_id } = req.body;
+
+      await req.db.query(`
+                          UPDATE Attendees 
+                          SET visit_id = ?, attendee_id = ?`, {
+                            visit_id, attendee_id
+                          })
+
+      res.json({ success: true, message: 'Attendee updated successfully' });
+    } catch (err) {
+      console.log(err)
+      res.json({ success: false, err: err});
+    }
+  })
+
 // endpoint to add a scheduled visitation
 app.post('/schedule-visitation', async function(req, res) { 
   try {
