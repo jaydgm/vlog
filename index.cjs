@@ -374,10 +374,10 @@ app.put('/update-visitation', async function(req, res) {
 
     await req.db.query(`
                       UPDATE Visitations 
-                      SET visitor_id = ?, visit_date = ?, visit_time = ?
+                      SET visit_date = ?, visit_time = ?
                       WHERE visitation_id = :visitation_id
                       `,
-                      {visitation_id, visitor_id, visit_date, visit_time})
+                      {visitation_id, visit_date, visit_time})
     res.json({success: true})
   } catch (err) {
     console.log(err)
