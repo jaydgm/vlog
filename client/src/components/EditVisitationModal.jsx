@@ -6,6 +6,7 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
   // split attendees by comma
   const [attendees, setAttendees] = useState(visitation.attendees ? visitation.attendees.split(',') : []);
   const [officers, setOfficers] = useState(users ? users.split(",") : []);
+  const [updatedOfficers, setUpdatedOfficers] = useState([]);
   const [visitDate, setVisitDate] = useState(new Date(visitation.visit_date).toISOString().slice(0, 10));
   const [visitTime, setVisitTime] = useState(visitation.visit_time);
   const [search, setSearch] = useState("");
@@ -44,6 +45,34 @@ const EditVisitationModal = ({ show, handleClose, visitation, users }) => {
       console.log("failed to update visitation: ", error);
     }
   }
+
+  const updateOfficers = async () => {
+    try {
+        for (const officer of updatedOfficers) {
+            const response = await fetch('http://localhost:3000/update-attendees', {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    'authorization': jwt,
+                },
+                body: JSON.stringify({
+                    visit_id: visitation.visitation_id,
+                    attendee_id: officer.user_id,
+                })
+            });
+
+            if (response.ok) {
+                const data = await response.json();
+                console.log(attendees)
+            } else {
+                console.error("Failed to update attendee");
+            }
+        }
+    } catch (error) {
+        console.error("Error updating attendees:", error);
+    }
+}
+
 
 
   const handleAddAttendee = () => {
